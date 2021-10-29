@@ -31,7 +31,7 @@ export const largecrossChainTransfers = async (height: number, args: any) => {
 
   const token = currency_id.token;
   const total = FixedPointNumber.fromInner(amount.toString(), config.ksm.decimal).toNumber();
-  const account = encodeAddress(dest.v1.interior.x1.accountId32.id.toString(), config.kar.prefix);
+  const account = encodeAddress(dest?.v1?.interior?.x1?.accountId32?.id?.toString() || '', config.kar.prefix);
   const parents = dest.v1.parents;
 
   if(total > 100 && token === 'KSM') {
