@@ -7,9 +7,13 @@ import { config } from '../config';
 const configuration = v1.createConfiguration();
 const events = new v1.EventsApi(configuration);
 
+// socket error
 export const API_ERROR = '[API_ERROR] Apipromise Create Error';
 export const SCANNER_ERROR = '[API_ERROR] Scanner Subscribe Error';
+
+// servers error
 export const KSM_BILL = '[KSM_BILL] Parachain Account Balance Is Wrong With Karura Total Insurance';
+export const LARGE_XTOKENS_TRANSFER = '[LARGE_XTOKENS_TRANSFER] More Than 100 KSM Transfer'
 
 export class Logger {
   public static log(...args: any[]) {
@@ -31,7 +35,11 @@ export class Logger {
   }
 
   public static pushEvent(title: string, text: string, priority?: EventPriority, alertType?: EventAlertType) {
-    events.createEvent({ body: { title, text, priority, alertType, host: config.host } });
+    try {
+      events.createEvent({ body: { title, text, priority, alertType, host: config.host } });
+    } catch (error) {
+      Logger.error('Datadog error')
+    }
   }
 
 }
