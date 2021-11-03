@@ -13,7 +13,9 @@ export const SCANNER_ERROR = '[API_ERROR] Scanner Subscribe Error';
 
 // servers error
 export const KSM_BILL = '[KSM_BILL] Parachain Account Balance Is Wrong With Karura Total Insurance';
-export const LARGE_XTOKENS_TRANSFER = '[LARGE_XTOKENS_TRANSFER] More Than 100 KSM Transfer'
+export const LARGE_XTOKENS_TRANSFER = '[LARGE_TRANSFER] More Than 100 KSM Xtokens Transfer'
+export const LARGE_CURRENCIES_TRANSFER = '[LARGE_TRANSFER] More Than $10000 Currencies Transfer'
+export const LARGE_TOKENS_TRANSFER = '[LARGE_TRANSFER] More Than $10000 Tokens Transfer'
 
 export class Logger {
   public static log(...args: any[]) {

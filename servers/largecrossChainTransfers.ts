@@ -3,7 +3,7 @@ import { CurrencyId } from "@acala-network/types/interfaces";
 import { u128, u64 } from "@polkadot/types";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { config } from "../config";
-import { LARGE_XTOKENS_TRANSFER, Logger } from "../utils";
+import { generateDexToken, LARGE_XTOKENS_TRANSFER, Logger } from "../utils";
 
 interface XTokensArgs {
   currency_id: {
@@ -29,9 +29,9 @@ interface XTokensArgs {
 export const largecrossChainTransfers = async (height: number, args: any) => {
   const { currency_id, amount, dest, dest_weight } = args as XTokensArgs;
 
-  const token = currency_id.token;
+  const token = generateDexToken(currency_id);
   const total = FixedPointNumber.fromInner(amount.toString(), config.ksm.decimal).toNumber();
-  const account = encodeAddress(dest?.v1?.interior?.x1?.accountId32?.id?.toString() || '', config.kar.prefix);
+  const account = dest?.v1?.interior?.x1?.accountId32?.id ? encodeAddress(dest?.v1?.interior?.x1?.accountId32?.id?.toString() || '', config.kar.prefix) : '';
   const parents = dest.v1.parents;
 
   if(total > 100 && token === 'KSM') {

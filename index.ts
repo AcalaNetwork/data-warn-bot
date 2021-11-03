@@ -1,24 +1,29 @@
+import { WalletPromise } from '@acala-network/sdk-wallet';
 import { SubscribeBlock } from '@open-web3/scanner/types';
 import Koa from 'koa';
 import { config } from './config';
 import { ksmBill, subLeastestHeader } from './servers'
+import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
-import { KarProvider, KarScanner, Logger, SCANNER_ERROR } from './utils';
+import { KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
 
 const app = new Koa();
 
 app.listen(config.port, async () => {
   console.log('Server [data-warn-bot] start at: ', config.port);
+  await KarProvider.isReady;
+  await KarApi.isReady;
+  await KsmApi.isReady;
+  const KarWallet = new WalletPromise(KarApi);
   initIntervalEvents();
-  subChainEvents();
+  subChainEvents(KarWallet);
 });
 
 const initIntervalEvents = async () => {
   ksmBill();
 }
 
-const subChainEvents = async () => {
-  await KarProvider.isReady;
+const subChainEvents = async (KarWallet: WalletPromise) => {
   KarScanner.subscribe().subscribe(header => {
     if(header.error != null && header.result === null) {
       Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');
@@ -31,6 +36,12 @@ const subChainEvents = async () => {
     block.result.extrinsics.forEach(ex => {
       if(ex.section == 'xTokens' && ex.method == 'transfer' && ex.result === 'ExtrinsicSuccess') {
         largecrossChainTransfers(block.blockNumber, ex.args);
+      }
+    })
+
+    block.result.events.forEach(ev => {
+      if(ev.section == 'currencies' && ev.method == 'Transferred') {
+        currenciesTransfers(KarWallet, block.blockNumber, ev);
       }
     })
   })

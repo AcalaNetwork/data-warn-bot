@@ -5,8 +5,6 @@ import { FixedPointNumber, forceToCurrencyId } from '@acala-network/sdk-core';
 const timing = 1000 * 60 * 5 ;
 
 export const ksmBill = async () => {
-  await KarApi.isReady;
-  await KsmApi.isReady;
   setInterval( async () => {
     const ksmAccount = await KsmApi.query.system.account(config.ksm.account);
     const ksmBalace = FixedPointNumber.fromInner(ksmAccount.data.free.toString(), config.ksm.decimal);

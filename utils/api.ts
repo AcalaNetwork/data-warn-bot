@@ -5,8 +5,26 @@ import { types, typesBundle } from '@acala-network/type-definitions';
 import { config } from '../config';
 import { API_ERROR, Logger } from '.';
 import Scanner from '@open-web3/scanner';
+import { WalletPromise } from '@acala-network/sdk-wallet';
 
 export type TChain = 'karura' | 'kusama';
+
+interface IToken extends Object {
+  token: string;
+}
+
+interface DexToken extends Object {
+  dexShare: IToken[]
+}
+
+export const generateDexToken = (tokens: IToken | DexToken) => {
+  if(tokens.hasOwnProperty('token')) {
+    return (tokens as IToken).token;
+  } else {
+    const _t = tokens as DexToken;
+    return `lp://${_t.dexShare[0].token}/${_t.dexShare[1].token}`
+  }
+}
 
 export class karuraApi {
   static instance: karuraApi | null
