@@ -5,6 +5,7 @@ import { config } from './config';
 import { ksmBill, subLeastestHeader } from './servers'
 import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
+import { polkadotXcms } from './servers/polkadotXcms';
 import { KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
 
 const app = new Koa();
@@ -36,6 +37,8 @@ const subChainEvents = async (KarWallet: WalletPromise) => {
     block.result.extrinsics.forEach(ex => {
       if(ex.section == 'xTokens' && ex.method == 'transfer' && ex.result === 'ExtrinsicSuccess') {
         largecrossChainTransfers(block.blockNumber, ex.args);
+      } else if(ex.section == 'polkadotXcm' && ex.result === 'ExtrinsicSuccess') {
+        polkadotXcms(block.blockNumber, ex.method, ex.args);
       }
     })
 
