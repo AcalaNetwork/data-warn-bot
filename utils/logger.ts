@@ -16,7 +16,9 @@ export const KSM_BILL = '[KSM_BILL] Parachain Account Balance Is Wrong With Karu
 export const LARGE_XTOKENS_TRANSFER = '[LARGE_TRANSFER] More Than 100 KSM Xtokens Transfer';
 export const LARGE_CURRENCIES_TRANSFER = '[LARGE_TRANSFER] More Than $10000 Currencies Transfer';
 export const LARGE_TOKENS_TRANSFER = '[LARGE_TRANSFER] More Than $10000 Tokens Transfer';
-export const POLKADOTXCMS = '[POLKADOTXCMS] Uncommon Transactions With "PokladotXcm.xx"'
+export const POLKADOTXCMS = '[POLKADOTXCMS] Uncommon Transactions With "PokladotXcm.xx"';
+export const REMOVE_LIQUID_STAKING = '[REMOVE_LIQUID_STAKING] More Than 5% Total Liquid Staking Withdrawed';
+export const OVER_8_DAYS_REDEEMREQUESTS = '[OVER_8_DAYS_REDEEMREQUESTS] HomaLite RedeemRequest Had Over Eight Days';
 
 export class Logger {
   public static log(...args: any[]) {

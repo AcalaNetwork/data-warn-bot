@@ -1,3 +1,4 @@
+import './utils/trace';
 import { WalletPromise } from '@acala-network/sdk-wallet';
 import { SubscribeBlock } from '@open-web3/scanner/types';
 import Koa from 'koa';
@@ -7,6 +8,8 @@ import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
 import { polkadotXcms } from './servers/polkadotXcms';
 import { KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
+import { removeLQ } from './servers/removeLQ';
+import { redeemRequests } from './servers/redeemRequests';
 
 const app = new Koa();
 
@@ -22,6 +25,7 @@ app.listen(config.port, async () => {
 
 const initIntervalEvents = async () => {
   ksmBill();
+  redeemRequests();
 }
 
 const subChainEvents = async (KarWallet: WalletPromise) => {
@@ -39,6 +43,8 @@ const subChainEvents = async (KarWallet: WalletPromise) => {
         largecrossChainTransfers(block.blockNumber, ex.args);
       } else if(ex.section == 'polkadotXcm' && ex.result === 'ExtrinsicSuccess') {
         polkadotXcms(block.blockNumber, ex.method, ex.args);
+      } else if(ex.section == 'dex' && ex.method == 'removeLiquidity' && ex.result === 'ExtrinsicSuccess') {
+        removeLQ(block.blockNumber, ex.args)
       }
     })
 

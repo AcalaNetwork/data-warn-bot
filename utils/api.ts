@@ -5,7 +5,6 @@ import { types, typesBundle } from '@acala-network/type-definitions';
 import { config } from '../config';
 import { API_ERROR, Logger } from '.';
 import Scanner from '@open-web3/scanner';
-import { WalletPromise } from '@acala-network/sdk-wallet';
 
 export type TChain = 'karura' | 'kusama';
 
