@@ -3,6 +3,8 @@ import { WalletPromise } from "@acala-network/sdk-wallet";
 import request, { gql } from "graphql-request";
 import { config } from "../config";
 import { DANGER_LOAN_POSITION, KarApi, Logger } from "../utils";
+// send wrong message to datadog time;
+const timing = 1000 * 60 * 60 * 8;
 
 type Token = 'KSM' | 'LKSM';
 
@@ -67,7 +69,7 @@ const requestPrice = async (KarWallet: WalletPromise) => {
   }
 }
 
-export const loanLevel = async (KarWallet: WalletPromise) => {
+export const _loanLevel = async (KarWallet: WalletPromise) => {
   const totalLoans = await requestAllLoans();
   const price = await requestPrice(KarWallet);
   const params = await requestParams();
@@ -96,3 +98,9 @@ export const loanLevel = async (KarWallet: WalletPromise) => {
     )
   }
 }
+
+export const loanLevel = (KarApi: WalletPromise) => {
+  setInterval(() => {
+    _loanLevel(KarApi);
+  }, timing);
+};
