@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  server:
+    container_name: data-warn-bot
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production

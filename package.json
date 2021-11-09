@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon index.ts"
+    "start": "nodemon index.ts",
+    "start:pro": "node dist/index.js",
+    "build": "rm -rf ./dist && tsc"
   },
   "author": "",
   "license": "ISC",
