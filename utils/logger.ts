@@ -19,6 +19,7 @@ export const LARGE_CURRENCIES_TRANSFER = '[LARGE_TRANSFER] More Than $10000 Curr
 export const POLKADOTXCMS = '[POLKADOTXCMS] Uncommon Transactions With "PokladotXcm.xx"';
 export const REMOVE_LIQUID_STAKING = '[REMOVE_LIQUID_STAKING] More Than 5% Total Liquid Staking Withdrawed';
 export const OVER_8_DAYS_REDEEMREQUESTS = '[OVER_8_DAYS_REDEEMREQUESTS] HomaLite RedeemRequest Had Over Eight Days';
+export const DANGER_LOAN_POSITION = '[DANGER_LOAN_POSITION] CollateralRatio Less Than RequiredCollateralRatio';
 
 export class Logger {
   public static log(...args: any[]) {

@@ -10,6 +10,7 @@ import { polkadotXcms } from './servers/polkadotXcms';
 import { KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
 import { removeLQ } from './servers/removeLQ';
 import { redeemRequests } from './servers/redeemRequests';
+import { loanLevel } from './servers/loanLevel';
 
 const app = new Koa();
 
@@ -19,13 +20,14 @@ app.listen(config.port, async () => {
   await KarApi.isReady;
   await KsmApi.isReady;
   const KarWallet = new WalletPromise(KarApi);
-  initIntervalEvents();
+  initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
 });
 
-const initIntervalEvents = async () => {
+const initIntervalEvents = async (KarWallet: WalletPromise) => {
   ksmBill();
   redeemRequests();
+  loanLevel(KarWallet);
 }
 
 const subChainEvents = async (KarWallet: WalletPromise) => {
