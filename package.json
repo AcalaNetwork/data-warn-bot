@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "start": "nodemon index.ts",
-    "start:pro": "node dist/index.js",
+    "serve": "pm2-runtime start pm2.config.js",
+    "start:pro": "yarn run serve",
     "build": "rm -rf ./dist && tsc"
   },
   "author": "",
