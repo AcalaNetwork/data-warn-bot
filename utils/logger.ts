@@ -12,6 +12,7 @@ export const API_ERROR = '[API_ERROR] Apipromise Create Error';
 export const SCANNER_ERROR = '[API_ERROR] Scanner Subscribe Error';
 
 // servers error
+export const BLOCK_HEIGHT = '[BLOCK_HEIGHT] Submit Lastest Block Height';
 export const KSM_BILL = '[KSM_BILL] Parachain Account Balance Is Wrong With Karura Total Insurance';
 export const LARGE_XTOKENS_TRANSFER = '[LARGE_TRANSFER] More Than 100 KSM Xtokens Transfer';
 export const LARGE_CURRENCIES_TRANSFER = '[LARGE_TRANSFER] More Than $10000 Currencies Transfer';
@@ -41,6 +42,7 @@ export class Logger {
   }
 
   public static pushEvent(title: string, text: string, priority?: EventPriority, alertType?: EventAlertType) {
+    Logger.log(title, text);
     try {
       events.createEvent({ body: { title, text, priority, alertType, host: config.host } });
     } catch (error) {

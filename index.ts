@@ -1,4 +1,3 @@
-import './utils/trace';
 import { WalletPromise } from '@acala-network/sdk-wallet';
 import { SubscribeBlock } from '@open-web3/scanner/types';
 import Koa from 'koa';
