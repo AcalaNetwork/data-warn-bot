@@ -12,15 +12,15 @@ export const ksmBill = () => {
 
 export const _ksmBill = async () => {
   const ksmAccount = await KsmApi.query.system.account(config.ksm.account);
-  const ksmBalace = FixedPointNumber.fromInner(ksmAccount.data.free.toString(), config.ksm.decimal);
+  const ksmBalance = FixedPointNumber.fromInner(ksmAccount.data.free.toString(), config.ksm.decimal);
 
-  const _karBalace = await KarApi.query.tokens.totalIssuance(forceToCurrencyId(KarApi, 'KSM'));
-  const karBalace = FixedPointNumber.fromInner(_karBalace.toString(), config.ksm.decimal);
+  const _karBalance = await KarApi.query.tokens.totalIssuance(forceToCurrencyId(KarApi, 'KSM'));
+  const karBalance = FixedPointNumber.fromInner(_karBalance.toString(), config.ksm.decimal);
 
-  if (ksmBalace.lte(karBalace) || (ksmBalace.sub(karBalace)).div(karBalace).toNumber() > 0.001) {
+  if (ksmBalance.lte(karBalance) || (ksmBalance.sub(karBalance)).div(karBalance).toNumber() > 0.01) {
     Logger.pushEvent(
       KSM_BILL,
-      `%%% \n - KSM Balacne In Parachain Account: __${ksmBalace.toNumber()}__ \n - Total Issuance In KARURA: __${karBalace.toString()}__ \n %%%`,
+      `%%% \n - KSM Balacne In Parachain Account: __${ksmBalance.toNumber()}__ \n - Total Issuance In KARURA: __${karBalance.toString()}__ \n %%%`,
       'normal',
       'warning');
   }
