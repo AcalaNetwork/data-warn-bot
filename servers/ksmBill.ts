@@ -17,7 +17,7 @@ export const _ksmBill = async () => {
   const _karBalance = await KarApi.query.tokens.totalIssuance(forceToCurrencyId(KarApi, 'KSM'));
   const karBalance = FixedPointNumber.fromInner(_karBalance.toString(), config.ksm.decimal);
 
-  if (ksmBalance.lte(karBalance) || (ksmBalance.sub(karBalance)).div(karBalance).toNumber() > 0.01) {
+  if (ksmBalance.lte(karBalance) || (ksmBalance.sub(karBalance)).div(karBalance).toNumber() > 0.03) {
     Logger.pushEvent(
       KSM_BILL,
       `%%% \n - KSM Balacne In Parachain Account: __${ksmBalance.toNumber()}__ \n - Total Issuance In KARURA: __${karBalance.toString()}__ \n %%%`,
