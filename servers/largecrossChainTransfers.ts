@@ -26,7 +26,7 @@ interface XTokensArgs {
   dest_weight: u64;
 }
 
-export const largecrossChainTransfers = async (height: number, args: any) => {
+export const largecrossChainTransfers = async (height: number, args: any, index: number) => {
   const { currency_id, amount, dest, dest_weight } = args as XTokensArgs;
 
   const token = generateDexToken(currency_id);
@@ -34,7 +34,10 @@ export const largecrossChainTransfers = async (height: number, args: any) => {
   const account = dest?.v1?.interior?.x1?.accountId32?.id ? encodeAddress(dest?.v1?.interior?.x1?.accountId32?.id?.toString() || '', config.kar.prefix) : '';
   const parents = dest.v1.parents;
 
-  if(total > 100 && token === 'KSM') {
-    Logger.pushEvent(LARGE_XTOKENS_TRANSFER, `%%% \n - block_height: __${height}__ \n - sender: __${account}__ \n - dest: - parents: ${parents} \n - currency_id: __${token}__ \n - amount: __${total}__ \n %%%`);
+  if(total > 1000 && token === 'KSM') {
+    Logger.pushEvent(
+      LARGE_XTOKENS_TRANSFER,
+      `%%% \n - block_height: __${height}__ \n - sender: __${account}__ \n - dest: - parents: ${parents} \n - currency_id: __${token}__ \n - amount: __${total}__ \n - link: https://karura.subscan.io/extrinsic/${height}-${index} \n %%%`
+    );
   } 
 }
