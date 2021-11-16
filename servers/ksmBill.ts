@@ -20,7 +20,7 @@ export const _ksmBill = async () => {
   if (ksmBalace.lte(karBalace) || (ksmBalace.sub(karBalace)).div(karBalace).toNumber() > 0.001) {
     Logger.pushEvent(
       KSM_BILL,
-      `%%% \n - KSM Balacne In Parachain Account: __${ksmBalace.toNumber()}__ \n - Total Insurance In KARURA: __${karBalace.toString()}__ \n %%%`,
+      `%%% \n - KSM Balacne In Parachain Account: __${ksmBalace.toNumber()}__ \n - Total Issuance In KARURA: __${karBalace.toString()}__ \n %%%`,
       'normal',
       'warning');
   }
