@@ -15,10 +15,12 @@ export const currenciesTransfers = async (KarWallet: WalletPromise, height: numb
   const _amount = FixedPointNumber.fromInner(amount.toString(), token.decimal);
   const TokenPrice = _amount.times(price);
 
+  const link = event.phaseType === 'ApplyExtrinsic' ? `- link: https://karura.subscan.io/extrinsic/${height}-${event.phaseIndex}?event=${height}-${event.index} \n ` : '';
+
   if(TokenPrice.toNumber() > 300000) {
     Logger.pushEvent(
       LARGE_CURRENCIES_TRANSFER,
-      `%%% \n - token: ${tokenName} \n - from: ${fromAccount} \n - to: ${toAccount} \n - amount: ${_amount.toNumber()} \n %%%`,
+      `%%% \n - token: ${tokenName} \n - from: ${fromAccount} \n - to: ${toAccount} \n - amount: ${_amount.toNumber()} \n ${link} %%%`,
       'normal',
       'warning'
     )
