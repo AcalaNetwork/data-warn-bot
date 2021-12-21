@@ -10,6 +10,7 @@ import { KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from '
 import { removeLQ } from './servers/removeLQ';
 import { redeemRequests } from './servers/redeemRequests';
 import { loanLevel } from './servers/loanLevel';
+import { dexStatus } from './servers/dexStatus';
 
 const app = new Koa();
 
@@ -27,6 +28,7 @@ const initIntervalEvents = async (KarWallet: WalletPromise) => {
   ksmBill();
   redeemRequests();
   loanLevel(KarWallet);
+  dexStatus(KarWallet);
 }
 
 const subChainEvents = async (KarWallet: WalletPromise) => {

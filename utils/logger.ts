@@ -21,6 +21,7 @@ export const POLKADOTXCMS = '[POLKADOTXCMS] Uncommon Transactions With "Pokladot
 export const REMOVE_LIQUID_STAKING = '[REMOVE_LIQUID_STAKING] More Than 5% Total Liquid Staking Withdrawed';
 export const OVER_8_DAYS_REDEEMREQUESTS = '[OVER_8_DAYS_REDEEMREQUESTS] HomaLite RedeemRequest Had Over Eight Days';
 export const DANGER_LOAN_POSITION = '[DANGER_LOAN_POSITION] CollateralRatio Less Than RequiredCollateralRatio';
+export const DEX_PRICE_WARNING = '[DEX_PRICE_WARNING] Rate Is Gte 10%(15%) Or Lte -10%(-15%) Without(With) KUSD';
 
 export class Logger {
   public static log(...args: any[]) {
