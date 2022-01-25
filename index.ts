@@ -11,6 +11,7 @@ import { removeLQ } from './servers/removeLQ';
 import { redeemRequests } from './servers/redeemRequests';
 import { loanLevel } from './servers/loanLevel';
 import { dexStatus } from './servers/dexStatus';
+import { auction } from './servers/auction';
 
 const app = new Koa();
 
@@ -27,6 +28,7 @@ app.listen(config.port, async () => {
 const initIntervalEvents = async (KarWallet: WalletPromise) => {
   ksmBill();
   redeemRequests();
+  auction();
   loanLevel(KarWallet);
   dexStatus(KarWallet);
 }
