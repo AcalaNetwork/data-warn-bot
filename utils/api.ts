@@ -64,9 +64,30 @@ export class kusamaApi {
   }
 };
 
+export class acalaApi {
+  static instance: acalaApi | null
+  public api: ApiPromise;
+  constructor() {
+    const provider = new WsProvider(config.endPoints.acala);
+    this.api = new ApiPromise(options({ provider }));
+    this.api.isReadyOrError.then(_api => {
+      Logger.log('acalaApi is Ready!')
+    }).catch(err => {
+      Logger.pushEvent(API_ERROR, err, 'normal', 'error');
+    })
+    if (acalaApi.instance == null) {
+      acalaApi.instance = this;
+    }
+    return acalaApi.instance;
+  }
+};
+
+
 const _KarApi = new karuraApi();
 export const KarApi = _KarApi.api;
 export const KarScanner = _KarApi.scanner;
 export const KarProvider = _KarApi.provider;
 const _KsmApi = new kusamaApi();
 export const KsmApi = _KsmApi.api;
+const _AcaApi = new acalaApi();
+export const AcaApi = _AcaApi.api;

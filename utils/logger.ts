@@ -23,6 +23,7 @@ export const OVER_8_DAYS_REDEEMREQUESTS = '[OVER_8_DAYS_REDEEMREQUESTS] HomaLite
 export const DANGER_LOAN_POSITION = '[DANGER_LOAN_POSITION] CollateralRatio Less Than RequiredCollateralRatio';
 export const DEX_PRICE_WARNING = '[DEX_PRICE_WARNING] Rate Is Gte 10%(15%) Or Lte -10%(-15%) Without(With) KUSD';
 export const AUCTIONS = '[AUCTIONS] Auctions Currently Exists';
+export const INCENTIVES = '[INCENTIVES] Check Incentives Reward Vault Account'
 
 export class Logger {
   public static log(...args: any[]) {

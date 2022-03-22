@@ -6,12 +6,13 @@ import { ksmBill, subLeastestHeader } from './servers'
 import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
 import { polkadotXcms } from './servers/polkadotXcms';
-import { KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
+import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
 import { removeLQ } from './servers/removeLQ';
 import { redeemRequests } from './servers/redeemRequests';
 import { loanLevel } from './servers/loanLevel';
 import { dexStatus } from './servers/dexStatus';
 import { auction } from './servers/auction';
+import { checkIncentives } from './servers/checkIncentives';
 
 const app = new Koa();
 
@@ -20,7 +21,10 @@ app.listen(config.port, async () => {
   await KarProvider.isReady;
   await KarApi.isReady;
   await KsmApi.isReady;
+  await AcaApi.isReady;
   const KarWallet = new WalletPromise(KarApi);
+  const AcaWallet = new WalletPromise(AcaApi);
+  checkIncentives(AcaWallet, KarWallet);
   initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
 });
