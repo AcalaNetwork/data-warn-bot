@@ -23,8 +23,6 @@ app.listen(config.port, async () => {
   await KsmApi.isReady;
   await AcaApi.isReady;
   const KarWallet = new WalletPromise(KarApi);
-  const AcaWallet = new WalletPromise(AcaApi);
-  checkIncentives(AcaWallet, KarWallet);
   initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
 });
@@ -35,6 +33,7 @@ const initIntervalEvents = async (KarWallet: WalletPromise) => {
   auction();
   loanLevel(KarWallet);
   dexStatus(KarWallet);
+  checkIncentives();
 }
 
 const subChainEvents = async (KarWallet: WalletPromise) => {

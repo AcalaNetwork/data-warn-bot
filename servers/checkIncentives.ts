@@ -1,9 +1,8 @@
 import { forceToCurrencyIdName } from "@acala-network/sdk-core";
-import { WalletPromise } from "@acala-network/sdk-wallet";
 import moment from "moment";
 import { AcaApi, INCENTIVES, KarApi, Logger } from "../utils"
 
-export const _checkIncentives = async (AcaWallet: WalletPromise, karWallet: WalletPromise) => {
+export const _checkIncentives = async () => {
   const acaAccount = '23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit';
   const karAccount = 'qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a';
   const AcaNativeData = await AcaApi.query.system.account(acaAccount);
@@ -24,7 +23,7 @@ export const _checkIncentives = async (AcaWallet: WalletPromise, karWallet: Wall
   strings += `- Balance in ACALA in 23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit\n `
   strings += `- token: ACA,  balance(free): ${(AcaNativeData as any).data.free.toString()} \n`
   AcaNonNativeData.forEach(item => {
-    const token = AcaWallet.getToken(forceToCurrencyIdName(item[0].args[1]));
+    const token = forceToCurrencyIdName(item[0].args[1]);
     const free = (item[1] as any).free.toString();
     strings += `- token: ${token},  balance(free): ${free.toString()} \n`
   })
@@ -34,10 +33,10 @@ export const _checkIncentives = async (AcaWallet: WalletPromise, karWallet: Wall
     `%%% \n  ${strings} \n %%%`, 'normal', 'info')
 }
 
-export const checkIncentives = (AcaWallet: WalletPromise, karWallet: WalletPromise) => {
+export const checkIncentives = () => {
   setInterval(() => {
     if(moment().diff(moment().format('YYYY-MM-DD 12:00:00')) <= 1000 * 60 * 10) {
-      _checkIncentives(AcaWallet, karWallet);
+      _checkIncentives();
     }
   }, 1000 * 60 * 10);
 };
