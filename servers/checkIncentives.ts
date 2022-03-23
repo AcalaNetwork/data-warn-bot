@@ -35,8 +35,6 @@ export const _checkIncentives = async () => {
 
 export const checkIncentives = () => {
   setInterval(() => {
-    if(moment().diff(moment().format('YYYY-MM-DD 12:00:00')) <= 1000 * 60 * 10) {
-      _checkIncentives();
-    }
-  }, 1000 * 60 * 10);
+    _checkIncentives();
+  }, 1000 * 60 * 60 * 24);
 };
