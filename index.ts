@@ -13,6 +13,7 @@ import { loanLevel } from './servers/loanLevel';
 import { dexStatus } from './servers/dexStatus';
 import { auction } from './servers/auction';
 import { checkIncentives } from './servers/checkIncentives';
+import { homaCheckWithKsm } from './servers/homa';
 
 const app = new Koa();
 
@@ -34,6 +35,7 @@ const initIntervalEvents = async (KarWallet: WalletPromise) => {
   loanLevel(KarWallet);
   dexStatus(KarWallet);
   checkIncentives();
+  homaCheckWithKsm();
 }
 
 const subChainEvents = async (KarWallet: WalletPromise) => {
