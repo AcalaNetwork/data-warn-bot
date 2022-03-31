@@ -51,7 +51,7 @@ export const _homaCheckWithKsm = async () => {
     strings += `- subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
 
   })
-  if(!(eraCheckOk || ksmUnlockingLenCheckOk || percentCheckOk)) {
+  if(!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
     Logger.pushEvent(
       HOMA,
       `%%% \n ${strings} \n %%%`,
