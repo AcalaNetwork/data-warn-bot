@@ -38,9 +38,9 @@ export const _homaCheckWithKsm = async () => {
     const ksmBonded = _ksmBonded - MinNominatorBond;
     const ksmUnlockingLen = (ksmLedger.toJSON() as any).unlocking.length || 0;
 
-    ksmUnlockingLenCheckOk = unlockingLen === ksmUnlockingLen || unlockingLen + 1 === ksmUnlockingLen;
+    ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && (unlockingLen === ksmUnlockingLen || unlockingLen + 1 === ksmUnlockingLen);
 
-    percentCheckOk = bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
+    percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
     strings += `- ## subaccount #${ledgerNo}: \n`
     strings += '\n ### bonded \n';
