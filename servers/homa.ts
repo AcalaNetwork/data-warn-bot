@@ -7,6 +7,7 @@ const ledger1 = 'FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL';
 const ledger2 = 'EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA';
 
 export const _homaCheckWithKsm = async () => {
+  let strings = '';
   const karEra = await KarApi.query.homa.relayChainCurrentEra();
   const ksmEra = await KsmApi.query.staking.currentEra();
   const eraCheckOk = Number(karEra.toString()) <= Number(ksmEra.toString());
@@ -20,6 +21,10 @@ export const _homaCheckWithKsm = async () => {
 
   const _MinNominatorBond = await KsmApi.query.staking.minNominatorBond();
   const MinNominatorBond = Number(_MinNominatorBond.toString())
+
+  strings += '## Era Check \n'
+  strings += `- Karura: ${karEra.toString()} \n`
+  strings += `- Kusama: ${ksmEra.toString()} \n \n`
 
   karLedgerss.forEach(ledger => {
     const [no, data] = ledger;
@@ -37,11 +42,19 @@ export const _homaCheckWithKsm = async () => {
 
     percentCheckOk = bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
+    strings += `- ## subaccount #${ledgerNo}: \n`
+    strings += '\n ### bonded \n';
+    strings += `- homa ledger ${ledgerNo}: ${bonded} \n`
+    strings += `- subaccount #${ledgerNo}: ${ksmBonded} \n`
+    strings += '\n ### unlocking \n'
+    strings += `- homa ledger ${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
+    strings += `- subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
+
   })
   if(!(eraCheckOk || ksmUnlockingLenCheckOk || percentCheckOk)) {
     Logger.pushEvent(
       HOMA,
-      `%%% \n errors: ${!eraCheckOk ? 'current era error! \n' : ''} ${!percentCheckOk ? 'ledger bonded error! \n' : ''} ${!ksmUnlockingLenCheckOk ? 'unlocking length error! \n' : ''} \n %%%`,
+      `%%% \n ${strings} \n %%%`,
       'normal',
       'warning');
   }
