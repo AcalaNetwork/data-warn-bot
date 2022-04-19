@@ -12,8 +12,8 @@ import { redeemRequests } from './servers/redeemRequests';
 import { loanLevel } from './servers/loanLevel';
 import { dexStatus } from './servers/dexStatus';
 import { auction } from './servers/auction';
-import { checkIncentives } from './servers/checkIncentives';
-import { homaCheckWithKsm } from './servers/homa';
+import { checkIncentives, _checkIncentives } from './servers/checkIncentives';
+import { homaCheckWithKsm, _homaCheckWithKsm } from './servers/homa';
 
 const app = new Koa();
 
