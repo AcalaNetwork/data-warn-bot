@@ -56,6 +56,13 @@ export const _homaCheckWithKsm = async () => {
     `%%% \n ${strings} \n %%%`,
     'normal',
     'warning');
+  if(!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
+    Logger.pushEvent(
+      HOMA,
+      `%%% \n ${strings} \n %%%`,
+      'normal',
+      'warning');
+  }
 
 }
 
