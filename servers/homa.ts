@@ -67,6 +67,7 @@ export const _homaCheckWithKsm = async () => {
 }
 
 export const homaCheckWithKsm = () => {
+  _homaCheckWithKsm();
   setInterval(() => {
     _homaCheckWithKsm();
   }, timing)
