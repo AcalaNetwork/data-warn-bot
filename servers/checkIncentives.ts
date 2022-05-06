@@ -1,3 +1,4 @@
+import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { AcaApi, INCENTIVES, KarApi, Logger } from "../utils"
 
 export const _checkIncentives = async () => {
@@ -34,7 +35,11 @@ export const _checkIncentives = async () => {
 }
 
 export const checkIncentives = () => {
-  setInterval(() => {
-    _checkIncentives();
-  }, 1000 * 60 * 60 * 24);
-};
+  const rule = new RecurrenceRule();
+  rule.hour = 12
+  rule.minute = 0
+  rule.second = 0
+
+  const job = scheduleJob(rule, _checkIncentives);
+}
+

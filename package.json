@@ -19,11 +19,13 @@
     "@datadog/datadog-api-client": "^1.0.0-beta.5",
     "@open-web3/scanner": "^1.0.1",
     "@polkadot/api": "^6.5.2",
+    "@types/node-schedule": "^2.1.0",
     "axios": "^0.24.0",
     "graphql": "^16.0.1",
     "graphql-request": "3.5.0",
     "koa": "^2.13.4",
     "moment": "^2.29.1",
+    "node-schedule": "^2.1.0",
     "pm2": "^5.1.2"
   },
   "devDependencies": {

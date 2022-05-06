@@ -31,13 +31,21 @@ app.listen(config.port, async () => {
 });
 
 const initIntervalEvents = async (KarWallet: WalletPromise) => {
+  // every 5 mins
   ksmBill();
+  // 4:00 12:00 20:00
   redeemRequests();
+  // every 30 mins
   auction();
+  // 4:00 12:00 20:00
   loanLevel(KarWallet);
+  // every 5 mins
   dexStatus(KarWallet);
+  // 12:00
   checkIncentives();
+  // 0:00 8:00 16:00
   homaCheckWithKsm();
+  // 11:00
   acalaHomaCheckWithKsm();
 }
 

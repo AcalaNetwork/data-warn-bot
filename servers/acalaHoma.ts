@@ -1,3 +1,4 @@
+import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { AcaApi, PolkaApi, Logger, ACALA_HOMA } from "../utils"
 // send wrong message to datadog time;
 const timing = 1000 * 60 * 60 * 24;
@@ -63,9 +64,11 @@ export const _acalaHomaCheckWithKsm = async () => {
 }
 
 export const acalaHomaCheckWithKsm = () => {
-  _acalaHomaCheckWithKsm();
-  setInterval(() => {
-    _acalaHomaCheckWithKsm();
-  }, timing)
+  const rule = new RecurrenceRule();
+  rule.hour = 11
+  rule.minute = 0
+  rule.second = 0
+
+  const job = scheduleJob(rule, _acalaHomaCheckWithKsm);
 }
 

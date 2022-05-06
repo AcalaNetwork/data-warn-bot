@@ -1,12 +1,7 @@
+import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { AUCTIONS, KarApi, Logger } from "../utils";
 
 const timing = 1000 * 60 * 30;
-
-export const auction = () => {
-  setInterval(() => {
-    _auction()
-  }, timing);
-}
 
 export interface IAuction {
   id: string;
@@ -37,4 +32,12 @@ export const _auction = async () => {
       'info'
     )
   }
+}
+
+export const auction = () => {
+  const rule = new RecurrenceRule();
+  rule.minute = [0, 30]
+  rule.second = 0
+
+  const job = scheduleJob(rule, _auction);
 }

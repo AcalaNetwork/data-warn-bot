@@ -1,16 +1,8 @@
 import { request, gql } from 'graphql-request';
 import moment from 'moment';
+import { RecurrenceRule, scheduleJob } from 'node-schedule';
 import { config } from '../config';
 import { KarApi, Logger, OVER_8_DAYS_REDEEMREQUESTS } from "../utils";
-
-// send wrong message to datadog time;
-const timing = 1000 * 60 * 60 * 8;
-
-export const redeemRequests = () => {
-  setInterval(() => {
-    _redeemRequests()
-  }, timing);
-}
 
 export const _redeemRequests = async () => {
   const _redeems = await KarApi.query.homaLite.redeemRequests.entries();
@@ -52,3 +44,12 @@ const gqlRequest = async (accont: string) => request(config.subql, gql`
     }
   }
 `)
+
+export const redeemRequests = () => {
+  const rule = new RecurrenceRule();
+  rule.hour = [4, 12, 20]
+  rule.minute = 0
+  rule.second = 0
+
+  const job = scheduleJob(rule, _redeemRequests);
+}

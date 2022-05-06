@@ -1,6 +1,7 @@
 import { FixedPointNumber as FN, forceToCurrencyIdName } from "@acala-network/sdk-core";
 import { WalletPromise } from "@acala-network/sdk-wallet";
 import axios from "axios";
+import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { config } from "../config";
 import { DEX_PRICE_WARNING, KarApi, Logger } from "../utils"
 // send wrong message to datadog time;
@@ -75,7 +76,9 @@ export const _dexStatus = async (KarWallet: WalletPromise) => {
 }
 
 export const dexStatus = (KarApi: WalletPromise) => {
-  setInterval(() => {
-    _dexStatus(KarApi);
-  }, timing);
-};
+  const rule = new RecurrenceRule();
+  rule.minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+  rule.second = 0
+
+  const job = scheduleJob(rule, () => _dexStatus(KarApi));
+}

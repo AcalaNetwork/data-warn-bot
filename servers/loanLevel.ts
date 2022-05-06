@@ -1,6 +1,7 @@
 import { FixedPointNumber } from "@acala-network/sdk-core";
 import { WalletPromise } from "@acala-network/sdk-wallet";
 import request, { gql } from "graphql-request";
+import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { config } from "../config";
 import { DANGER_LOAN_POSITION, KarApi, Logger } from "../utils";
 // send wrong message to datadog time;
@@ -100,7 +101,10 @@ export const _loanLevel = async (KarWallet: WalletPromise) => {
 }
 
 export const loanLevel = (KarApi: WalletPromise) => {
-  setInterval(() => {
-    _loanLevel(KarApi);
-  }, timing);
-};
+  const rule = new RecurrenceRule();
+  rule.hour = [4, 12, 20]
+  rule.minute = 0
+  rule.second = 0
+
+  const job = scheduleJob(rule, () => _loanLevel(KarApi));
+}

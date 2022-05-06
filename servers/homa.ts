@@ -1,3 +1,4 @@
+import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { HOMA, KarApi, KsmApi, Logger } from "../utils"
 // send wrong message to datadog time;
 const timing = 1000 * 60 * 60 * 6;
@@ -73,3 +74,11 @@ export const homaCheckWithKsm = () => {
   }, timing)
 }
 
+export const loanLevel = () => {
+  const rule = new RecurrenceRule();
+  rule.hour = [0, 8 , 16]
+  rule.minute = 0
+  rule.second = 0
+
+  const job = scheduleJob(rule, _homaCheckWithKsm);
+}
