@@ -82,6 +82,24 @@ export class acalaApi {
   }
 };
 
+export class polkaApi {
+  static instance: polkaApi | null
+  public api: ApiPromise;
+  constructor() {
+    const provider = new WsProvider(config.endPoints.polkadot);
+    this.api = new ApiPromise(options({ provider }));
+    this.api.isReadyOrError.then(_api => {
+      Logger.log('polkaApi is Ready!')
+    }).catch(err => {
+      Logger.pushEvent(API_ERROR, err, 'normal', 'error');
+    })
+    if (polkaApi.instance == null) {
+      polkaApi.instance = this;
+    }
+    return polkaApi.instance;
+  }
+};
+
 
 const _KarApi = new karuraApi();
 export const KarApi = _KarApi.api;
@@ -91,3 +109,5 @@ const _KsmApi = new kusamaApi();
 export const KsmApi = _KsmApi.api;
 const _AcaApi = new acalaApi();
 export const AcaApi = _AcaApi.api;
+const _PolkaApi = new polkaApi();
+export const PolkaApi = _PolkaApi.api;

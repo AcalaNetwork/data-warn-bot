@@ -24,7 +24,8 @@ export const DANGER_LOAN_POSITION = '[DANGER_LOAN_POSITION] CollateralRatio Less
 export const DEX_PRICE_WARNING = '[DEX_PRICE_WARNING] Rate Is Gte 10%(15%) Or Lte -10%(-15%) Without(With) KUSD';
 export const AUCTIONS = '[AUCTIONS] Auctions Currently Exists';
 export const INCENTIVES = '[INCENTIVES] Check Incentives Reward Vault Account'
-export const HOMA = '[HOMA] Check Homa Status With Kusama Subaccount'
+export const HOMA = '[KARURA_HOMA] Check Homa Status With Kusama Subaccount'
+export const ACALA_HOMA = '[ACALA_HOMA] Check Homa Status With Kusama Subaccount'
 
 export class Logger {
   public static log(...args: any[]) {

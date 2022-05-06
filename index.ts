@@ -6,7 +6,7 @@ import { ksmBill, subLeastestHeader } from './servers'
 import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
 import { polkadotXcms } from './servers/polkadotXcms';
-import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, SCANNER_ERROR } from './utils';
+import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, PolkaApi, SCANNER_ERROR } from './utils';
 import { removeLQ } from './servers/removeLQ';
 import { redeemRequests } from './servers/redeemRequests';
 import { loanLevel } from './servers/loanLevel';
@@ -14,6 +14,7 @@ import { dexStatus } from './servers/dexStatus';
 import { auction } from './servers/auction';
 import { checkIncentives, _checkIncentives } from './servers/checkIncentives';
 import { homaCheckWithKsm, _homaCheckWithKsm } from './servers/homa';
+import { acalaHomaCheckWithKsm } from './servers/acalaHoma';
 
 const app = new Koa();
 
@@ -23,6 +24,7 @@ app.listen(config.port, async () => {
   await KarApi.isReady;
   await KsmApi.isReady;
   await AcaApi.isReady;
+  await PolkaApi.isReady;
   const KarWallet = new WalletPromise(KarApi);
   initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
@@ -36,6 +38,7 @@ const initIntervalEvents = async (KarWallet: WalletPromise) => {
   dexStatus(KarWallet);
   checkIncentives();
   homaCheckWithKsm();
+  acalaHomaCheckWithKsm();
 }
 
 const subChainEvents = async (KarWallet: WalletPromise) => {
