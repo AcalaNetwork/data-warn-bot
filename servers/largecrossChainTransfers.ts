@@ -1,5 +1,4 @@
-import { FixedPointNumber, forceToCurrencyIdName } from "@acala-network/sdk-core";
-import { CurrencyId } from "@acala-network/types/interfaces";
+import { FixedPointNumber } from "@acala-network/sdk-core";
 import { u128, u64 } from "@polkadot/types";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { config } from "../config";

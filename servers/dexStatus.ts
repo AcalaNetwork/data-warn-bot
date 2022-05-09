@@ -1,11 +1,9 @@
-import { FixedPointNumber as FN, forceToCurrencyIdName } from "@acala-network/sdk-core";
-import { WalletPromise } from "@acala-network/sdk-wallet";
+import { Wallet } from "@acala-network/sdk";
+import { FixedPointNumber as FN, forceToCurrencyName } from "@acala-network/sdk-core";
 import axios from "axios";
 import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { config } from "../config";
 import { DEX_PRICE_WARNING, KarApi, Logger } from "../utils"
-// send wrong message to datadog time;
-const timing = 1000 * 60 * 5;
 
 interface ItradingPairs {
   [k: string]: {
@@ -18,7 +16,21 @@ interface ItradingPairs {
   }
 }
 
-export const _dexStatus = async (KarWallet: WalletPromise) => {
+const formatQueryParmas = (name: string) => {
+  if(name.includes('://')) {
+    if(name.startsWith('sa://')) {
+      return {StableAssetPoolToken: name.slice(5)};
+    } else if(name.startsWith('lc://')) {
+      return {liquidCrowdloan: name.slice(5)};
+    } else if(name.startsWith('fa://')) {
+      return {ForeignAsset: name.slice(5)};
+    }
+  } else {
+    return {Token: name};
+  }
+};
+
+export const _dexStatus = async (KarWallet: Wallet) => {
   let strings = '';
   const pools = await KarApi.query.dex.tradingPairStatuses.entries();
   const enabledPoolQuerys: [string, string][] = [];
@@ -27,22 +39,27 @@ export const _dexStatus = async (KarWallet: WalletPromise) => {
   const prices: any = {};
   pools.forEach(pool => {
     const [pair, status] = pool;
-    const [token1, token2] = [forceToCurrencyIdName((pair.args[0] as any)[0]), forceToCurrencyIdName((pair.args[0] as any)[1])];
+    const [token1, token2] = [forceToCurrencyName((pair.args[0] as any)[0]), forceToCurrencyName((pair.args[0] as any)[1])];
     if (status.toString() === 'Enabled') {
       enabledPoolQuerys.push([token1, token2]);
       tokens.push(...[token1, token2]);
     }
   })
-  const liquidityPools = await Promise.all(enabledPoolQuerys.map(pair => KarApi.query.dex.liquidityPool([{ Token: pair[0] }, { Token: pair[1] }])));
-  const liquidityPrices = await Promise.all(Array.from(new Set(tokens)).map(token => KarWallet.queryPrice(token)));
+  const liquidityPools = await Promise.all(enabledPoolQuerys.map(pair => KarApi.query.dex.liquidityPool([formatQueryParmas(pair[0]), formatQueryParmas(pair[1])])));
+  const liquidityPrices = await Promise.all(Array.from(new Set(tokens)).map( async token => {
+    return {
+      token: KarWallet.__getToken(token),
+      price: await KarWallet.getPrice(token)
+    }
+  }));
   const karPrice = await axios.get(config.price, { params: { token: 'KAR' } })
-  liquidityPrices.forEach(token => prices[token.token.name] = token.price.toNumber());
+  liquidityPrices.forEach(token => prices[token.token?.name || ''] = token.price.toNumber());
   prices.KAR = karPrice.data.data.price[0];
 
   liquidityPools.forEach((item, index) => {
     const [token0, token1] = enabledPoolQuerys[index];
     const pair = `${token0}-${token1}`;
-    const [decimal0, decimal1] = [KarWallet.getToken(token0).decimal, KarWallet.getToken(token1).decimal]
+    const [decimal0, decimal1] = [KarWallet?.__getToken(token0)?.decimals, KarWallet?.__getToken(token1)?.decimals]
     const [_issuance0, _issuance1] = [(item.toJSON() as any)[0], (item.toJSON() as any)[1]];
     const [issuance0, issuance1] = [FN.fromInner(_issuance0, decimal0), FN.fromInner(_issuance1, decimal1)];
     const exchange_rate_dex = issuance1.div(issuance0).toNumber();
@@ -75,7 +92,7 @@ export const _dexStatus = async (KarWallet: WalletPromise) => {
   }
 }
 
-export const dexStatus = (KarApi: WalletPromise) => {
+export const dexStatus = (KarApi: Wallet) => {
   const rule = new RecurrenceRule();
   rule.minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
   rule.second = 0

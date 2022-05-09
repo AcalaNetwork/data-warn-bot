@@ -68,15 +68,8 @@ export const _homaCheckWithKsm = async () => {
 }
 
 export const homaCheckWithKsm = () => {
-  _homaCheckWithKsm();
-  setInterval(() => {
-    _homaCheckWithKsm();
-  }, timing)
-}
-
-export const loanLevel = () => {
   const rule = new RecurrenceRule();
-  rule.hour = [0, 8 , 16]
+  rule.hour = [2, 10, 18]
   rule.minute = 0
   rule.second = 0
 

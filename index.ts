@@ -1,4 +1,4 @@
-import { WalletPromise } from '@acala-network/sdk-wallet';
+import { Wallet } from '@acala-network/sdk/wallet';
 import { SubscribeBlock } from '@open-web3/scanner/types';
 import Koa from 'koa';
 import { config } from './config';
@@ -25,12 +25,12 @@ app.listen(config.port, async () => {
   await KsmApi.isReady;
   await AcaApi.isReady;
   await PolkaApi.isReady;
-  const KarWallet = new WalletPromise(KarApi);
+  const KarWallet = new Wallet(KarApi);
   initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
 });
 
-const initIntervalEvents = async (KarWallet: WalletPromise) => {
+const initIntervalEvents = async (KarWallet: Wallet) => {
   // every 5 mins
   ksmBill();
   // 4:00 12:00 20:00
@@ -41,15 +41,15 @@ const initIntervalEvents = async (KarWallet: WalletPromise) => {
   loanLevel(KarWallet);
   // every 5 mins
   dexStatus(KarWallet);
-  // 12:00
+  // 10:00
   checkIncentives();
-  // 0:00 8:00 16:00
+  // 2:00 10:00 18:00
   homaCheckWithKsm();
-  // 11:00
+  // 10:00
   acalaHomaCheckWithKsm();
 }
 
-const subChainEvents = async (KarWallet: WalletPromise) => {
+const subChainEvents = async (KarWallet: Wallet) => {
   KarScanner.subscribe().subscribe(header => {
     if(header.error != null && header.result === null) {
       Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');

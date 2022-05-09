@@ -1,5 +1,5 @@
+import { Wallet } from "@acala-network/sdk";
 import { FixedPointNumber } from "@acala-network/sdk-core";
-import { WalletPromise } from "@acala-network/sdk-wallet";
 import request, { gql } from "graphql-request";
 import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { config } from "../config";
@@ -61,16 +61,16 @@ const requestParams = async () => {
   }
 }
 
-const requestPrice = async (KarWallet: WalletPromise) => {
-  const price = await Promise.all([KarWallet.queryPrice('KSM'), KarWallet.queryPrice('LKSM')]);
+const requestPrice = async (KarWallet: Wallet) => {
+  const price = await Promise.all([KarWallet.getPrice('KSM'), KarWallet.getPrice('LKSM')]);
 
   return {
-    KSM: price[0].price,
-    LKSM: price[1].price
+    KSM: price[0],
+    LKSM: price[1]
   }
 }
 
-export const _loanLevel = async (KarWallet: WalletPromise) => {
+export const _loanLevel = async (KarWallet: Wallet) => {
   const totalLoans = await requestAllLoans();
   const price = await requestPrice(KarWallet);
   const params = await requestParams();
@@ -100,11 +100,11 @@ export const _loanLevel = async (KarWallet: WalletPromise) => {
   }
 }
 
-export const loanLevel = (KarApi: WalletPromise) => {
+export const loanLevel = (Karwallet: Wallet) => {
   const rule = new RecurrenceRule();
   rule.hour = [4, 12, 20]
   rule.minute = 0
   rule.second = 0
 
-  const job = scheduleJob(rule, () => _loanLevel(KarApi));
+  const job = scheduleJob(rule, () => _loanLevel(Karwallet));
 }

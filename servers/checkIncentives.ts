@@ -32,11 +32,12 @@ export const _checkIncentives = async () => {
   Logger.pushEvent(
     INCENTIVES,
     `%%% \n  ${_strings} \n %%%`, 'normal', 'info')
+
 }
 
 export const checkIncentives = () => {
   const rule = new RecurrenceRule();
-  rule.hour = 12
+  rule.hour = 10
   rule.minute = 0
   rule.second = 0
 

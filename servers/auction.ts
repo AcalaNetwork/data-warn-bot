@@ -1,8 +1,6 @@
 import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { AUCTIONS, KarApi, Logger } from "../utils";
 
-const timing = 1000 * 60 * 30;
-
 export interface IAuction {
   id: string;
   lastBider?: string;

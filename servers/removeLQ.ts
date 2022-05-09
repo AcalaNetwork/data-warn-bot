@@ -3,7 +3,7 @@ import { generateDexToken, KarApi, Logger, REMOVE_LIQUID_STAKING } from "../util
 
 export const removeLQ = async (height: number, args: any, index: number) => {
   const {currency_id_a, currency_id_b, remove_share} = args;
-  const dexToken = forceToDexShareCurrencyId(KarApi, [generateDexToken(currency_id_a),generateDexToken(currency_id_b)]);
+  const dexToken = forceToDexShareCurrencyId(KarApi as any, [generateDexToken(currency_id_a),generateDexToken(currency_id_b)]);
   const _toalInstance = await KarApi.query.tokens.totalIssuance(dexToken);
   const toalInstance = parseInt(_toalInstance.toString());
   const percent = remove_share / toalInstance;

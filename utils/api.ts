@@ -1,10 +1,10 @@
-import { ApiPromise } from '@polkadot/api';
+import { ApiPromise } from '@polkadot/api/promise';
 import { WsProvider } from '@polkadot/rpc-provider';
-import { options } from '@acala-network/api';
 import { types, typesBundle } from '@acala-network/type-definitions';
 import { config } from '../config';
 import { API_ERROR, Logger } from '.';
 import Scanner from '@open-web3/scanner';
+import { options } from '@acala-network/api';
 
 export type TChain = 'karura' | 'kusama';
 
@@ -33,7 +33,7 @@ export class karuraApi {
   constructor() {
     if (karuraApi.instance == null) {
       this.provider = new WsProvider(config.endPoints.karura);
-      this.api = new ApiPromise(options({ provider: this.provider }));
+      this.api = new ApiPromise(options({provider: this.provider}));
       this.scanner = new Scanner({ wsProvider: this.provider, types, typesBundle })
       this.api.isReadyOrError.then(_api => {
         Logger.log('karuraApi is Ready!')
@@ -51,7 +51,7 @@ export class kusamaApi {
   public api: ApiPromise;
   constructor() {
     const provider = new WsProvider(config.endPoints.kusama);
-    this.api = new ApiPromise(options({ provider }));
+    this.api = new ApiPromise(options({provider}));
     this.api.isReadyOrError.then(_api => {
       Logger.log('kusamaApi is Ready!')
     }).catch(err => {
@@ -69,7 +69,7 @@ export class acalaApi {
   public api: ApiPromise;
   constructor() {
     const provider = new WsProvider(config.endPoints.acala);
-    this.api = new ApiPromise(options({ provider }));
+    this.api = new ApiPromise(options({provider}));
     this.api.isReadyOrError.then(_api => {
       Logger.log('acalaApi is Ready!')
     }).catch(err => {
@@ -87,7 +87,7 @@ export class polkaApi {
   public api: ApiPromise;
   constructor() {
     const provider = new WsProvider(config.endPoints.polkadot);
-    this.api = new ApiPromise(options({ provider }));
+    this.api = new ApiPromise(options({provider}));
     this.api.isReadyOrError.then(_api => {
       Logger.log('polkaApi is Ready!')
     }).catch(err => {
