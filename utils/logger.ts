@@ -48,11 +48,11 @@ export class Logger {
 
   public static pushEvent(title: string, text: string, priority?: EventPriority, alertType?: EventAlertType) {
     Logger.log(title, text);
-    try {
-      events.createEvent({ body: { title, text, priority, alertType, host: config.host } });
-    } catch (error) {
-      Logger.error('Datadog error')
-    }
+    // try {
+    //   events.createEvent({ body: { title, text, priority, alertType, host: config.host } });
+    // } catch (error) {
+    //   Logger.error('Datadog error')
+    // }
   }
 
 }

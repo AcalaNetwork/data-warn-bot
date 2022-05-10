@@ -26,7 +26,6 @@ app.listen(config.port, async () => {
   await AcaApi.isReady;
   await PolkaApi.isReady;
   const KarWallet = new Wallet(KarApi);
-  _ksmBill();
   initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
 });
@@ -51,7 +50,7 @@ const initIntervalEvents = async (KarWallet: Wallet) => {
 }
 
 const subChainEvents = async (KarWallet: Wallet) => {
-  KarScanner.subscribe().subscribe(header => {
+  KarScanner.subscribe({start: 1863559}).subscribe(header => {
     if(header.error != null && header.result === null) {
       Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');
       return Logger.error('Subscribe Block Error')
