@@ -2,7 +2,7 @@ import { Wallet } from '@acala-network/sdk/wallet';
 import { SubscribeBlock } from '@open-web3/scanner/types';
 import Koa from 'koa';
 import { config } from './config';
-import { ksmBill, subLeastestHeader } from './servers'
+import { ksmBill, subLeastestHeader, _ksmBill } from './servers'
 import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
 import { polkadotXcms } from './servers/polkadotXcms';
@@ -26,6 +26,7 @@ app.listen(config.port, async () => {
   await AcaApi.isReady;
   await PolkaApi.isReady;
   const KarWallet = new Wallet(KarApi);
+  _ksmBill();
   initIntervalEvents(KarWallet);
   subChainEvents(KarWallet);
 });

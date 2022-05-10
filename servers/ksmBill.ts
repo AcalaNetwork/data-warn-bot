@@ -18,11 +18,11 @@ export const _ksmBill = async () => {
 
   let strings = '';
 
-  if ((ksmBalance.sub(karBalance)).div(karBalance).toNumber() > 0.01) {
+  if ((ksmBalance.sub(karBalance)).div(karBalance).toNumber() > 0.01 || (karBalance.sub(ksmBalance)).div(ksmBalance).toNumber() > 0.01) {
     strings += `\n - KSM Balacne In Parachain Account: __${ksmBalance.toNumber()}__ \n - Total Issuance In KARURA: __${karBalance.toString()}__ \n `
   }
 
-  if ((polkaBalance.sub(acaBalance)).div(acaBalance).toNumber() > 0.01) {
+  if ((acaBalance.sub(polkaBalance)).div(polkaBalance).toNumber() > 0.01) {
     strings += `- DOT Balacne In Parachain Account: __${polkaBalance.toNumber()}__ \n - Total Issuance In ACALA: __${acaBalance.toString()}__ \n `
   }
 
@@ -36,9 +36,17 @@ export const _ksmBill = async () => {
 }
 
 export const ksmBill = () => {
-  const rule = new RecurrenceRule();
-  rule.minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-  rule.second = 0
+  const loopRule = new RecurrenceRule();
+  loopRule.minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+  loopRule.second = 0
 
-  const job = scheduleJob(rule, _ksmBill);
+  const loopJob = scheduleJob(loopRule, _ksmBill);
+
+
+  const infoRule = new RecurrenceRule();
+  infoRule.hour = 10;
+  infoRule.minute = 0;
+  infoRule.second = 0
+
+  const infoJob = scheduleJob(infoRule, _ksmBill);
 }
