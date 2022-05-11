@@ -22,7 +22,7 @@ export const _ksmBill = async () => {
     strings += `\n - KSM Balacne In Parachain Account: __${ksmBalance.toNumber()}__ \n - Total Issuance In KARURA: __${karBalance.toString()}__ \n `
   }
 
-  if ((acaBalance.sub(polkaBalance)).div(polkaBalance).toNumber() > 0.01) {
+  if ((acaBalance.sub(polkaBalance)).div(polkaBalance).toNumber() > 0.01 || (polkaBalance.sub(acaBalance)).div(acaBalance).toNumber() > 0.01) {
     strings += `- DOT Balacne In Parachain Account: __${polkaBalance.toNumber()}__ \n - Total Issuance In ACALA: __${acaBalance.toString()}__ \n `
   }
 
