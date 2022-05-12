@@ -7,7 +7,7 @@ const ledger0 = 'HTAeD1dokCVs9MwnC1q9s2a7d2kQ52TAjrxE1y5mj5MFLLA';
 const ledger1 = 'FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL';
 const ledger2 = 'EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA';
 
-export const _homaCheckWithKsm = async () => {
+export const homaCheckWithKsm = async () => {
   let strings = '';
   const karEra = await KarApi.query.homa.relayChainCurrentEra();
   const ksmEra = await KsmApi.query.staking.currentEra();
@@ -65,13 +65,4 @@ export const _homaCheckWithKsm = async () => {
       'warning');
   }
 
-}
-
-export const homaCheckWithKsm = () => {
-  const rule = new RecurrenceRule();
-  rule.hour = [2, 10, 18]
-  rule.minute = 0
-  rule.second = 0
-
-  const job = scheduleJob(rule, _homaCheckWithKsm);
 }

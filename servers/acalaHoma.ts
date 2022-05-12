@@ -3,7 +3,7 @@ import { AcaApi, PolkaApi, Logger, ACALA_HOMA } from "../utils"
 
 const ledger0 = '15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn';
 
-export const _acalaHomaCheckWithKsm = async () => {
+export const acalaHomaCheckWithKsm = async () => {
   let strings = '';
   const acaEra = await AcaApi.query.homa.relayChainCurrentEra();
   const polkaEra = await PolkaApi.query.staking.currentEra();
@@ -60,13 +60,3 @@ export const _acalaHomaCheckWithKsm = async () => {
   }
 
 }
-
-export const acalaHomaCheckWithKsm = () => {
-  const rule = new RecurrenceRule();
-  rule.hour = 10
-  rule.minute = 0
-  rule.second = 0
-
-  const job = scheduleJob(rule, _acalaHomaCheckWithKsm);
-}
-

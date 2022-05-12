@@ -30,7 +30,7 @@ const formatQueryParmas = (name: string) => {
   }
 };
 
-export const _dexStatus = async (KarWallet: Wallet) => {
+export const dexStatus = async (KarWallet: Wallet) => {
   let strings = '';
   const pools = await KarApi.query.dex.tradingPairStatuses.entries();
   const enabledPoolQuerys: [string, string][] = [];
@@ -90,12 +90,4 @@ export const _dexStatus = async (KarWallet: Wallet) => {
       'info'
     )
   }
-}
-
-export const dexStatus = (KarApi: Wallet) => {
-  const rule = new RecurrenceRule();
-  rule.minute = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-  rule.second = 0
-
-  const job = scheduleJob(rule, () => _dexStatus(KarApi));
 }

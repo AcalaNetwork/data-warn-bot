@@ -70,7 +70,7 @@ const requestPrice = async (KarWallet: Wallet) => {
   }
 }
 
-export const _loanLevel = async (KarWallet: Wallet) => {
+export const loanLevel = async (KarWallet: Wallet) => {
   const totalLoans = await requestAllLoans();
   const price = await requestPrice(KarWallet);
   const params = await requestParams();
@@ -98,13 +98,4 @@ export const _loanLevel = async (KarWallet: Wallet) => {
       'warning'
     )
   }
-}
-
-export const loanLevel = (Karwallet: Wallet) => {
-  const rule = new RecurrenceRule();
-  rule.hour = [4, 12, 20]
-  rule.minute = 0
-  rule.second = 0
-
-  const job = scheduleJob(rule, () => _loanLevel(Karwallet));
 }

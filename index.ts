@@ -2,7 +2,7 @@ import { Wallet } from '@acala-network/sdk/wallet';
 import { SubscribeBlock } from '@open-web3/scanner/types';
 import Koa from 'koa';
 import { config } from './config';
-import { ksmBill, subLeastestHeader, _ksmBill } from './servers'
+import { ksmBill, subLeastestHeader } from './servers'
 import { currenciesTransfers } from './servers/currenciesTransfers';
 import { largecrossChainTransfers } from './servers/largecrossChainTransfers';
 import { polkadotXcms } from './servers/polkadotXcms';
@@ -12,8 +12,8 @@ import { redeemRequests } from './servers/redeemRequests';
 import { loanLevel } from './servers/loanLevel';
 import { dexStatus } from './servers/dexStatus';
 import { auction } from './servers/auction';
-import { checkIncentives, _checkIncentives } from './servers/checkIncentives';
-import { homaCheckWithKsm, _homaCheckWithKsm } from './servers/homa';
+import { checkIncentives } from './servers/checkIncentives';
+import { homaCheckWithKsm } from './servers/homa';
 import { acalaHomaCheckWithKsm } from './servers/acalaHoma';
 
 const app = new Koa();
@@ -31,22 +31,39 @@ app.listen(config.port, async () => {
 });
 
 const initIntervalEvents = async (KarWallet: Wallet) => {
-  // every 5 mins
-  ksmBill();
-  // 4:00 12:00 20:00
-  redeemRequests();
-  // every 30 mins
-  auction();
-  // 4:00 12:00 20:00
-  loanLevel(KarWallet);
-  // every 5 mins
-  dexStatus(KarWallet);
-  // 10:00
-  checkIncentives();
-  // 2:00 10:00 18:00
-  homaCheckWithKsm();
-  // 10:00
-  acalaHomaCheckWithKsm();
+  setInterval(() => {
+    // every 5 mins
+    ksmBill(false);
+    // every 5 mins
+    dexStatus(KarWallet);
+  }, 1000 * 60 * 5);
+
+  setInterval(() => {
+    const hour = new Date().getHours();
+    // every 1 hour
+    auction();
+
+    if(hour === 4 || hour === 12 || hour === 20) {
+      // 4:00 12:00 20:00
+      loanLevel(KarWallet);
+      // 4:00 12:00 20:00
+      redeemRequests();
+    }
+    if(hour === 10) {
+      // 10:00
+      checkIncentives();
+      // 10:00
+      acalaHomaCheckWithKsm();
+      // info in 10 mins
+      ksmBill(true);
+    }
+
+    if(hour === 2 || hour === 10 || hour === 18) {
+      // 2:00 10:00 18:00
+      homaCheckWithKsm();
+    }
+
+  }, 1000 * 60 * 60)
 }
 
 const subChainEvents = async (KarWallet: Wallet) => {

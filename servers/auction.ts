@@ -11,7 +11,7 @@ export interface IAuction {
   durationSoftCap: string;
 }
 
-export const _auction = async () => {
+export const auction = async () => {
   let strings = '';
 
   const data = await KarApi.query.auction.auctions.entries();
@@ -30,12 +30,4 @@ export const _auction = async () => {
       'info'
     )
   }
-}
-
-export const auction = () => {
-  const rule = new RecurrenceRule();
-  rule.minute = [0, 30]
-  rule.second = 0
-
-  const job = scheduleJob(rule, _auction);
 }

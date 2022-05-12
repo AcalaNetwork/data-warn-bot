@@ -1,7 +1,7 @@
 import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { AcaApi, INCENTIVES, KarApi, Logger } from "../utils"
 
-export const _checkIncentives = async () => {
+export const checkIncentives = async () => {
   const acaAccount = '23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit';
   const karAccount = 'qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a';
   const AcaNativeData = await AcaApi.query.system.account(acaAccount);
@@ -34,13 +34,3 @@ export const _checkIncentives = async () => {
     `%%% \n  ${_strings} \n %%%`, 'normal', 'info')
 
 }
-
-export const checkIncentives = () => {
-  const rule = new RecurrenceRule();
-  rule.hour = 10
-  rule.minute = 0
-  rule.second = 0
-
-  const job = scheduleJob(rule, _checkIncentives);
-}
-
