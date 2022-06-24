@@ -37,13 +37,10 @@ export const acalaHomaCheckWithKsm = async () => {
 
     percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
-    strings += `- ## subaccount #${ledgerNo}: \n`
-    strings += '\n ### bonded \n';
-    strings += `- homa ledger ${ledgerNo}: ${bonded} \n`
-    strings += `- subaccount #${ledgerNo}: ${ksmBonded} \n`
-    strings += '\n ### unlocking \n'
-    strings += `- homa ledger ${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
-    strings += `- subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
+    strings += `- acala homa ledger #${ledgerNo}: bonded: ${bonded} \n`
+    strings += `- acala subaccount #${ledgerNo}: bonded: ${ksmBonded} \n`
+    strings += `- acala homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
+    strings += `- acala subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
 
   })
   Logger.pushEvent(
