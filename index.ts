@@ -52,8 +52,6 @@ const initIntervalEvents = async (KarWallet: Wallet) => {
     if(hour === 10) {
       // 10:00
       checkIncentives();
-      // 10:00
-      acalaHomaCheckWithKsm();
       // info in 10 mins
       ksmBill(true);
     }
@@ -61,6 +59,7 @@ const initIntervalEvents = async (KarWallet: Wallet) => {
     if(hour === 2 || hour === 10 || hour === 18) {
       // 2:00 10:00 18:00
       homaCheckWithKsm();
+      acalaHomaCheckWithKsm();
     }
 
   }, 1000 * 60 * 60)
