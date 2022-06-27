@@ -69,7 +69,7 @@ export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address:
 
   Object.keys(needPayObj).forEach(key => {
     needPayObj[key].balance = balanceObj[key];
-    needPayObj[key].paidableDays = balanceObj[key] / (needPayObj[key].periodPay * 60 * 24)
+    needPayObj[key].paidableDays = Math.floor(balanceObj[key] / (needPayObj[key].periodPay * 60 * 24))
   })
 
   return needPayObj;
