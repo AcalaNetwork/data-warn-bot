@@ -15,6 +15,7 @@ import { auction } from './servers/auction';
 import { checkIncentives } from './servers/checkIncentives';
 import { homaCheckWithKsm } from './servers/homa';
 import { acalaHomaCheckWithKsm } from './servers/acalaHoma';
+import { incenticesCheck } from './servers/incenticesCheck';
 
 const app = new Koa();
 
@@ -26,17 +27,18 @@ app.listen(config.port, async () => {
   await AcaApi.isReady;
   await PolkaApi.isReady;
   const KarWallet = new Wallet(KarApi);
-  initIntervalEvents(KarWallet);
+  const AcaWallet = new Wallet(AcaApi);
+  initIntervalEvents(KarWallet, AcaWallet);
   subChainEvents(KarWallet);
 });
 
-const initIntervalEvents = async (KarWallet: Wallet) => {
+const initIntervalEvents = async (KarWallet: Wallet, AcaWallet: Wallet) => {
   setInterval(() => {
     // every 5 mins
     ksmBill(false);
     // every 5 mins
     dexStatus(KarWallet);
-  }, 1000 * 60 * 5);
+  }, 1000 * 60 * 10);
 
   setInterval(() => {
     const hour = new Date().getHours();
@@ -54,6 +56,8 @@ const initIntervalEvents = async (KarWallet: Wallet) => {
       checkIncentives();
       // info in 10 mins
       ksmBill(true);
+      // check incentives
+      incenticesCheck(KarWallet, AcaWallet);
     }
 
     if(hour === 2 || hour === 10 || hour === 18) {
