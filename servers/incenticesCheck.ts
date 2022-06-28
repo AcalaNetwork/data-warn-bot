@@ -15,13 +15,13 @@ export const incenticesCheck = async (KarWallet: Wallet, AcaWallet: Wallet) => {
   strings += 'karura: \n';
   Object.keys(karura).forEach(item => {
     const data = karura[item];
-    strings += `balance: ${data.balance}, periodPay: ${data.periodPay}, paidableDays: ${data.paidableDays} \n`
+    strings += `token: ${item}, balance: ${data.balance}, periodPay: ${data.periodPay}, paidableDays: ${data.paidableDays} \n`
   })
 
   strings += 'acala: \n';
   Object.keys(acala).forEach(item => {
     const data = acala[item];
-    strings += `balance: ${data.balance}, periodPay: ${data.periodPay}, paidableDays: ${data.paidableDays} \n`
+    strings += `token: ${item}, balance: ${data.balance}, periodPay: ${data.periodPay}, paidableDays: ${data.paidableDays} \n`
   })
 
   Logger.pushEvent(
