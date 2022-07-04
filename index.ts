@@ -52,8 +52,6 @@ const initIntervalEvents = async (KarWallet: Wallet, AcaWallet: Wallet) => {
       redeemRequests();
     }
     if(hour === 10) {
-      // 10:00
-      checkIncentives();
       // info in 10 mins
       ksmBill(true);
       // check incentives
