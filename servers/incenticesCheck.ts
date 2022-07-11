@@ -48,8 +48,8 @@ export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address:
   const data = await Promise.all(pools.map(async poolId => await api.query.incentives.incentiveRewardAmounts.entries(poolId.args[0])));
   const needPayObj: {[k: string]: {
     balance?: number;
-    periodPay: number;
-    paidableDays: number;
+    periodPay: number | string;
+    paidableDays: number | string;
   }} = {};
   data.forEach((rewardAmounts, i) => {
     const rewardAmountsConfig = rewardAmounts
@@ -57,7 +57,7 @@ export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address:
         const token = wallet.__getToken(item[0].args[1]);
         const payAmount = FixedPointNumber.fromInner(item[1].toString(), token.decimals);
         if(needPayObj[token.display] && needPayObj[token.display].periodPay) {
-          needPayObj[token.display].periodPay = needPayObj[token.display].periodPay + payAmount.toNumber()
+          needPayObj[token.display].periodPay = Number(needPayObj[token.display].periodPay) + payAmount.toNumber()
         } else {
           needPayObj[token.display] = {
             periodPay: payAmount.toNumber(),
@@ -69,7 +69,17 @@ export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address:
 
   Object.keys(needPayObj).forEach(key => {
     needPayObj[key].balance = balanceObj[key];
-    needPayObj[key].paidableDays = Math.floor(balanceObj[key] / (needPayObj[key].periodPay * 60 * 24))
+    needPayObj[key].paidableDays = Math.floor(balanceObj[key] / (Number(needPayObj[key].periodPay) * 60 * 24))
+  })
+
+  Object.keys(balanceObj).forEach(key => {
+    if(!needPayObj[key]) {
+      needPayObj[key] = {
+        balance: balanceObj[key],
+        periodPay: '-',
+        paidableDays: '-',
+      }
+    }
   })
 
   return needPayObj;
