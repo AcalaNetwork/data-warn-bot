@@ -25,11 +25,11 @@ export const generateDexToken = (tokens: IToken) => {
     return `lp://${tokens?.dexShare[0].token}/${tokens?.dexShare[1].token}`
   } else if(tokens.erc20) {
     return `erc20://${tokens.erc20}`
-  } else if(tokens.foreignAsset) {
+  } else if(tokens.foreignAsset || tokens.hasOwnProperty('foreignAsset')) {
     return `fa://${tokens.foreignAsset}`
-  } else if(tokens.stableAssetPoolToken) {
+  } else if(tokens.stableAssetPoolToken || tokens.hasOwnProperty('stableAssetPoolToken')) {
     return `sa://${tokens.stableAssetPoolToken}`
-  } else if(tokens.liquidCrowdloan) {
+  } else if(tokens.liquidCrowdloan || tokens.hasOwnProperty('liquidCrowdloan')) {
     return `lc://${tokens.liquidCrowdloan}`
   } else {
     return JSON.stringify(tokens);
