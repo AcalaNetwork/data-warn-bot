@@ -18,7 +18,6 @@ export const currenciesTransfers = async (KarWallet: Wallet, height: number, eve
 
   const link = event.phaseType === 'ApplyExtrinsic' ? `- link: https://karura.subscan.io/extrinsic/${height}-${event.phaseIndex}?event=${height}-${event.index} \n ` : '';
 
-  console.log(`- token: ${tokenName} \n - from: ${fromAccount} \n - to: ${toAccount} \n - amount: ${_amount.toNumber()} \n ${link}`)
   if(TokenPrice.toNumber() > 300000) {
     Logger.pushEvent(
       LARGE_CURRENCIES_TRANSFER,
