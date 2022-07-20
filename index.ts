@@ -29,7 +29,7 @@ app.listen(config.port, async () => {
   await PolkaApi.isReady;
   const KarWallet = new Wallet(KarApi);
   const AcaWallet = new Wallet(AcaApi);
-  // initIntervalEvents(KarWallet, AcaWallet);
+  initIntervalEvents(KarWallet, AcaWallet);
   subChainEvents(KarWallet);
 });
 
