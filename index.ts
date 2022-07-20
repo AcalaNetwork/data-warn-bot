@@ -29,7 +29,7 @@ app.listen(config.port, async () => {
   await PolkaApi.isReady;
   const KarWallet = new Wallet(KarApi);
   const AcaWallet = new Wallet(AcaApi);
-  initIntervalEvents(KarWallet, AcaWallet);
+  // initIntervalEvents(KarWallet, AcaWallet);
   subChainEvents(KarWallet);
 });
 
@@ -75,22 +75,22 @@ const initIntervalEvents = async (KarWallet: Wallet, AcaWallet: Wallet) => {
 const subChainEvents = async (KarWallet: Wallet) => {
   KarScanner.subscribe().subscribe(header => {
     if(header.error != null && header.result === null) {
-      Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');
+      // Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');
       return Logger.error('Subscribe Block Error')
     }
     const block = header as SubscribeBlock;
 
-    subLeastestHeader(block);
+    // subLeastestHeader(block);
 
-    block.result.extrinsics.forEach(ex => {
-      if(ex.section == 'xTokens' && ex.method == 'transfer' && ex.result === 'ExtrinsicSuccess') {
-        largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
-      } else if(ex.section == 'polkadotXcm' && ex.result === 'ExtrinsicSuccess') {
-        polkadotXcms(block.blockNumber, ex.method, ex.args, ex.index);
-      } else if(ex.section == 'dex' && ex.method == 'removeLiquidity' && ex.result === 'ExtrinsicSuccess') {
-        removeLQ(block.blockNumber, ex.args, ex.index)
-      }
-    })
+    // block.result.extrinsics.forEach(ex => {
+    //   if(ex.section == 'xTokens' && ex.method == 'transfer' && ex.result === 'ExtrinsicSuccess') {
+    //     largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
+    //   } else if(ex.section == 'polkadotXcm' && ex.result === 'ExtrinsicSuccess') {
+    //     polkadotXcms(block.blockNumber, ex.method, ex.args, ex.index);
+    //   } else if(ex.section == 'dex' && ex.method == 'removeLiquidity' && ex.result === 'ExtrinsicSuccess') {
+    //     removeLQ(block.blockNumber, ex.args, ex.index)
+    //   }
+    // })
 
     block.result.events.forEach(ev => {
       if(ev.section == 'currencies' && ev.method == 'Transferred') {

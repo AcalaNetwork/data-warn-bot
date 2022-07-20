@@ -9,19 +9,30 @@ import { options } from '@acala-network/api';
 export type TChain = 'karura' | 'kusama';
 
 interface IToken extends Object {
-  token: string;
+  token?: string;
+  dexShare?: IToken[];
+  foreignAsset?: number;
+  erc20?: string;
+  liquidCrowdloan?: string;
+  stableAssetPoolToken?: string;
 }
 
-interface DexToken extends Object {
-  dexShare: IToken[]
-}
 
-export const generateDexToken = (tokens: IToken | DexToken) => {
-  if(tokens.hasOwnProperty('token')) {
-    return (tokens as IToken).token;
+export const generateDexToken = (tokens: IToken) => {
+  if(tokens.token) {
+    return tokens.token;
+  } else if(tokens.dexShare) {
+    return `lp://${tokens?.dexShare[0].token}/${tokens?.dexShare[1].token}`
+  } else if(tokens.erc20) {
+    return `erc20://${tokens.erc20}`
+  } else if(tokens.foreignAsset) {
+    return `fa://${tokens.foreignAsset}`
+  } else if(tokens.stableAssetPoolToken) {
+    return `sa://${tokens.stableAssetPoolToken}`
+  } else if(tokens.liquidCrowdloan) {
+    return `lc://${tokens.liquidCrowdloan}`
   } else {
-    const _t = tokens as DexToken;
-    return `lp://${_t.dexShare[0].token}/${_t.dexShare[1].token}`
+    return JSON.stringify(tokens);
   }
 }
 
