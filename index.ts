@@ -80,17 +80,17 @@ const subChainEvents = async (KarWallet: Wallet) => {
     }
     const block = header as SubscribeBlock;
 
-    // subLeastestHeader(block);
+    subLeastestHeader(block);
 
-    // block.result.extrinsics.forEach(ex => {
-    //   if(ex.section == 'xTokens' && ex.method == 'transfer' && ex.result === 'ExtrinsicSuccess') {
-    //     largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
-    //   } else if(ex.section == 'polkadotXcm' && ex.result === 'ExtrinsicSuccess') {
-    //     polkadotXcms(block.blockNumber, ex.method, ex.args, ex.index);
-    //   } else if(ex.section == 'dex' && ex.method == 'removeLiquidity' && ex.result === 'ExtrinsicSuccess') {
-    //     removeLQ(block.blockNumber, ex.args, ex.index)
-    //   }
-    // })
+    block.result.extrinsics.forEach(ex => {
+      if(ex.section == 'xTokens' && ex.method == 'transfer' && ex.result === 'ExtrinsicSuccess') {
+        largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
+      } else if(ex.section == 'polkadotXcm' && ex.result === 'ExtrinsicSuccess') {
+        polkadotXcms(block.blockNumber, ex.method, ex.args, ex.index);
+      } else if(ex.section == 'dex' && ex.method == 'removeLiquidity' && ex.result === 'ExtrinsicSuccess') {
+        removeLQ(block.blockNumber, ex.args, ex.index)
+      }
+    })
 
     block.result.events.forEach(ev => {
       if(ev.section == 'currencies' && ev.method == 'Transferred') {
