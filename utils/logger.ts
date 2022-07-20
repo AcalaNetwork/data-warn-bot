@@ -27,6 +27,7 @@ export const INCENTIVES = '[INCENTIVES_CHECK] Check Incentives Reward Vault Acco
 export const HOMA = '[KARURA_HOMA] Check Homa Status With Kusama Subaccount'
 export const ACALA_HOMA = '[ACALA_HOMA] Check Homa Status With Kusama Subaccount'
 export const INCENTIVES_BALANCE = '[INCENTIVES_BALANCE] Check the balance of the Incentives account is enough for a few days'
+export const PRICE_SERVER = '[PRICE_SERVER] Check Status Of Price Server'
 
 export class Logger {
   public static log(...args: any[]) {

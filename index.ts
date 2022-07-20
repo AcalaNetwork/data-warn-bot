@@ -16,6 +16,7 @@ import { checkIncentives } from './servers/checkIncentives';
 import { homaCheckWithKsm } from './servers/homa';
 import { acalaHomaCheckWithKsm } from './servers/acalaHoma';
 import { incenticesCheck } from './servers/incenticesCheck';
+import { priceServer } from './servers/priceServer';
 
 const app = new Koa();
 
@@ -33,6 +34,10 @@ app.listen(config.port, async () => {
 });
 
 const initIntervalEvents = async (KarWallet: Wallet, AcaWallet: Wallet) => {
+  setInterval(() => {
+    priceServer();
+  }, 1000 * 60)
+
   setInterval(() => {
     // every 5 mins
     ksmBill(false);
