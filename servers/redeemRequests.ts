@@ -27,7 +27,7 @@ export const redeemRequests = async () => {
   if(strings != '') {
     Logger.pushEvent(
       OVER_8_DAYS_REDEEMREQUESTS,
-      `%%% \n - checkTime: ${new Date().getTime()} \n - accounts: ${strings} \n %%%`,
+      `%%% \n - checkTime: ${new Date().getTime()} \n - accounts: ${strings} \n %%% @slack-Acala-data-warn-bot`,
       'normal',
       'warning',
     )

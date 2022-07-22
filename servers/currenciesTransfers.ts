@@ -21,7 +21,7 @@ export const currenciesTransfers = async (KarWallet: Wallet, height: number, eve
   if(TokenPrice.toNumber() > 300000) {
     Logger.pushEvent(
       LARGE_CURRENCIES_TRANSFER,
-      `%%% \n - token: ${tokenName} \n - from: ${fromAccount} \n - to: ${toAccount} \n - amount: ${_amount.toNumber()} \n ${link} %%%`,
+      `%%% \n - token: ${tokenName} \n - from: ${fromAccount} \n - to: ${toAccount} \n - amount: ${_amount.toNumber()} \n ${link} %%% @slack-Acala-data-warn-bot`,
       'normal',
       'warning'
     )

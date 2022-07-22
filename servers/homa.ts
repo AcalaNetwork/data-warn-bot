@@ -49,17 +49,18 @@ export const homaCheckWithKsm = async () => {
     strings += `- karura subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
 
   })
-  Logger.pushEvent(
-    HOMA,
-    `%%% \n ${strings} \n %%%`,
-    'normal',
-    'warning');
   if(!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
     Logger.pushEvent(
       HOMA,
-      `%%% \n ${strings} \n %%%`,
+      `%%% \n ${strings} \n %%%  @slack-Acala-data-warn-bot <@UPZRWB4UD>`,
       'normal',
-      'warning');
+      'error');
+  } else {
+    Logger.pushEvent(
+      HOMA,
+      `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`,
+      'normal',
+      'info');
   }
 
 }

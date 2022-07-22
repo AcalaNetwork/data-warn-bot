@@ -25,7 +25,7 @@ export const auction = async () => {
   if (strings != '') {
     Logger.pushEvent(
       AUCTIONS,
-      `%%% \n - list: \n ${strings} \n %%%`,
+      `%%% \n - list: \n ${strings} \n %%% @slack-Acala-data-warn-bot`,
       'normal',
       'info'
     )

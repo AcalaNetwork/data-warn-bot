@@ -93,7 +93,7 @@ export const loanLevel = async (KarWallet: Wallet) => {
   if(strings != '') {
     Logger.pushEvent(
       DANGER_LOAN_POSITION,
-      `%%% \n ${strings} \n %%%`,
+      `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot`,
       'normal',
       'warning'
     )

@@ -30,8 +30,8 @@ export const ksmBill = async (info = false) => {
   if (strings != '' || info) {
     Logger.pushEvent(
       KSM_BILL,
-      `%%% \n ${strings} \n %%%`,
+      `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot`,
       'normal',
-      'warning');
+      info ? 'info' : 'error');
   }
 }

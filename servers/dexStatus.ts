@@ -85,7 +85,7 @@ export const dexStatus = async (KarWallet: Wallet) => {
   if (strings != '') {
     Logger.pushEvent(
       DEX_PRICE_WARNING,
-      `%%% \n - list: \n ${strings} \n %%%`,
+      `%%% \n - list: \n ${strings} \n %%% @slack-Acala-data-warn-bot`,
       'normal',
       'info'
     )

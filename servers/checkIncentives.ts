@@ -1,6 +1,7 @@
 import { RecurrenceRule, scheduleJob } from "node-schedule";
 import { AcaApi, INCENTIVES, KarApi, Logger } from "../utils"
 
+// removed
 export const checkIncentives = async () => {
   const acaAccount = '23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit';
   const karAccount = 'qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a';

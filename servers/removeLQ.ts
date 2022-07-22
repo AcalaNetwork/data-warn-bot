@@ -11,7 +11,7 @@ export const removeLQ = async (height: number, args: any, index: number) => {
   if(percent > 0.05) {
     Logger.pushEvent(
       REMOVE_LIQUID_STAKING,
-      ` %%% \n - blockHeight: ${height} \n - token: ${dexToken.toString()} \n - percent: ${(percent * 100).toFixed(2)} \n - link: https://karura.subscan.io/extrinsic/${height}-${index} \n %%%`,
+      ` %%% \n - blockHeight: ${height} \n - token: ${dexToken.toString()} \n - percent: ${(percent * 100).toFixed(2)} \n - link: https://karura.subscan.io/extrinsic/${height}-${index} \n %%% @slack-Acala-data-warn-bot`,
       'normal',
       'warning'
     )

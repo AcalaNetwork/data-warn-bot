@@ -36,7 +36,9 @@ export const largecrossChainTransfers = async (height: number, args: any, index:
   if(total > 1000 && token === 'KSM') {
     Logger.pushEvent(
       LARGE_XTOKENS_TRANSFER,
-      `%%% \n - block_height: __${height}__ \n - sender: __${account}__ \n - dest: - parents: ${parents} \n - currency_id: __${token}__ \n - amount: __${total}__ \n - link: https://karura.subscan.io/extrinsic/${height}-${index} \n %%%`
+      `%%% \n - block_height: __${height}__ \n - sender: __${account}__ \n - dest: - parents: ${parents} \n - currency_id: __${token}__ \n - amount: __${total}__ \n - link: https://karura.subscan.io/extrinsic/${height}-${index} \n %%% @slack-Acala-data-warn-bot`,
+      'normal',
+      'warning'
     );
   } 
 }
