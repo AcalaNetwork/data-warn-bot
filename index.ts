@@ -42,7 +42,7 @@ const initIntervalEvents = async (KarWallet: Wallet, AcaWallet: Wallet) => {
     // every 5 mins
     ksmBill(false);
     // every 5 mins
-    dexStatus(KarWallet);
+    // dexStatus(KarWallet);
   }, 1000 * 60 * 10);
 
   setInterval(() => {
