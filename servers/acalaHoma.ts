@@ -1,10 +1,9 @@
-import { RecurrenceRule, scheduleJob } from "node-schedule";
-import { AcaApi, PolkaApi, Logger, ACALA_HOMA } from "../utils"
+import { AcaApi, PolkaApi, Logger, ACALA_HOMA } from "../utils";
 
-const ledger0 = '15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn';
+const ledger0 = "15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn";
 
 export const acalaHomaCheckWithKsm = async () => {
-  let strings = '';
+  let strings = "";
   const acaEra = await AcaApi.query.homa.relayChainCurrentEra();
   const polkaEra = await PolkaApi.query.staking.currentEra();
   const eraCheckOk = Number(acaEra.toString()) <= Number(polkaEra.toString());
@@ -15,13 +14,13 @@ export const acalaHomaCheckWithKsm = async () => {
   const ksmLedgers0 = await PolkaApi.query.staking.ledger(ledger0);
 
   const _MinNominatorBond = await PolkaApi.query.staking.minNominatorBond();
-  const MinNominatorBond = Number(_MinNominatorBond.toString())
+  const MinNominatorBond = Number(_MinNominatorBond.toString());
 
-  strings += '## Era Check \n'
-  strings += `- Acala: ${acaEra.toString()} \n`
-  strings += `- Polkadot: ${polkaEra.toString()} \n \n`
+  strings += "## Era Check \n";
+  strings += `- Acala: ${acaEra.toString()} \n`;
+  strings += `- Polkadot: ${polkaEra.toString()} \n \n`;
 
-  karLedgerss.forEach(ledger => {
+  karLedgerss.forEach((ledger) => {
     const [no, data] = ledger;
     const ledgerNo = Number(no.args[0].toString());
     const bonded = Number((data.toJSON() as any).bonded);
@@ -37,24 +36,17 @@ export const acalaHomaCheckWithKsm = async () => {
 
     percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
-    strings += `- acala homa ledger #${ledgerNo}: bonded: ${bonded} \n`
-    strings += `- acala subaccount #${ledgerNo}: bonded: ${ksmBonded} \n`
-    strings += `- acala homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
-    strings += `- acala subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
-
-  })
-  if(!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
-    Logger.pushEvent(
-      ACALA_HOMA,
-      `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`,
-      'normal',
-      'error');
+    strings += `- acala homa ledger #${ledgerNo}: bonded: ${bonded} \n`;
+    strings += `- acala subaccount #${ledgerNo}: bonded: ${ksmBonded} \n`;
+    strings += `- acala homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('"', "g"), "")} \n`;
+    strings += `- acala subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(
+      RegExp('"', "g"),
+      ""
+    )} \n`;
+  });
+  if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
+    Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "error");
   } else {
-    Logger.pushEvent(
-      ACALA_HOMA,
-      `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`,
-      'normal',
-      'info');
+    Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "info");
   }
-
-}
+};

@@ -1,14 +1,22 @@
-import { RecurrenceRule, scheduleJob } from "node-schedule";
-import { HOMA, KarApi, KsmApi, Logger } from "../utils"
+import { HOMA, KarApi, KsmApi, Logger } from "../utils";
 // send wrong message to datadog time;
 const timing = 1000 * 60 * 60 * 6;
 
-const ledger0 = 'HTAeD1dokCVs9MwnC1q9s2a7d2kQ52TAjrxE1y5mj5MFLLA';
-const ledger1 = 'FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL';
-const ledger2 = 'EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA';
+const ledger0 = "HTAeD1dokCVs9MwnC1q9s2a7d2kQ52TAjrxE1y5mj5MFLLA";
+const ledger1 = "FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL";
+const ledger2 = "EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA";
 
+/**
+ * check homa state:
+ * 1. era check. (karura + 1 >= kusama)
+ * 2. unlocking list length check. (karura + 1 >= kusama)
+ * 3. staking ledger balance check. (balance diff <= 0.3%)
+ *
+ * send [error] message if check failed
+ * send [info] message if check ok
+ */
 export const homaCheckWithKsm = async () => {
-  let strings = '';
+  let strings = "";
   const karEra = await KarApi.query.homa.relayChainCurrentEra();
   const ksmEra = await KsmApi.query.staking.currentEra();
   const eraCheckOk = Number(karEra.toString()) <= Number(ksmEra.toString());
@@ -21,19 +29,19 @@ export const homaCheckWithKsm = async () => {
   const ksmLedgers2 = await KsmApi.query.staking.ledger(ledger2);
 
   const _MinNominatorBond = await KsmApi.query.staking.minNominatorBond();
-  const MinNominatorBond = Number(_MinNominatorBond.toString())
+  const MinNominatorBond = Number(_MinNominatorBond.toString());
 
-  strings += '## Era Check \n'
-  strings += `- Karura: ${karEra.toString()} \n`
-  strings += `- Kusama: ${ksmEra.toString()} \n \n`
+  strings += "## Era Check \n";
+  strings += `- Karura: ${karEra.toString()} \n`;
+  strings += `- Kusama: ${ksmEra.toString()} \n \n`;
 
-  karLedgerss.forEach(ledger => {
+  karLedgerss.forEach((ledger) => {
     const [no, data] = ledger;
     const ledgerNo = Number(no.args[0].toString());
     const bonded = Number((data.toJSON() as any).bonded);
     const unlockingLen = (data.toJSON() as any).unlocking.length;
 
-    const ksmLedger = ledgerNo === 0 ? ksmLedgers0 : (ledgerNo === 1 ? ksmLedgers1 : ksmLedgers2)
+    const ksmLedger = ledgerNo === 0 ? ksmLedgers0 : ledgerNo === 1 ? ksmLedgers1 : ksmLedgers2;
 
     const _ksmBonded = Number((ksmLedger.toJSON() as any).active) || 0;
     const ksmBonded = _ksmBonded - MinNominatorBond;
@@ -43,24 +51,17 @@ export const homaCheckWithKsm = async () => {
 
     percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
-    strings += `- karura homa ledger #${ledgerNo}: bonded: ${bonded} \n`
-    strings += `- karura subaccount #${ledgerNo}: bonded: ${ksmBonded} \n`
-    strings += `- karura homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
-    strings += `- karura subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(RegExp('\"', 'g'), '')} \n`
-
-  })
-  if(!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
-    Logger.pushEvent(
-      HOMA,
-      `%%% \n ${strings} \n %%%  @slack-Acala-data-warn-bot <@UPZRWB4UD>`,
-      'normal',
-      'error');
+    strings += `- karura homa ledger #${ledgerNo}: bonded: ${bonded} \n`;
+    strings += `- karura subaccount #${ledgerNo}: bonded: ${ksmBonded} \n`;
+    strings += `- karura homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('"', "g"), "")} \n`;
+    strings += `- karura subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(
+      RegExp('"', "g"),
+      ""
+    )} \n`;
+  });
+  if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
+    Logger.pushEvent(HOMA, `%%% \n ${strings} \n %%%  @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "error");
   } else {
-    Logger.pushEvent(
-      HOMA,
-      `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`,
-      'normal',
-      'info');
+    Logger.pushEvent(HOMA, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "info");
   }
-
-}
+};
