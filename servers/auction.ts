@@ -1,5 +1,4 @@
-import { RecurrenceRule, scheduleJob } from "node-schedule";
-import { AUCTIONS, KarApi, Logger } from "../utils";
+import { AcaApi, AUCTIONS, KarApi, Logger } from "../utils";
 
 export interface IAuction {
   id: string;
@@ -12,10 +11,11 @@ export interface IAuction {
 }
 
 /// push [info] message if auction list is not empty
-export const auctionsCheck = async () => {
+export const auctionsCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
   let strings = "";
 
-  const data = await KarApi.query.auction.auctions.entries();
+  const api = env === "KARURA" ? KarApi : AcaApi;
+  const data = await api.query.auction.auctions.entries();
   data.forEach((item) => {
     const [auctionId, auctionInfo] = item;
     const info = auctionInfo.toJSON() as any;
@@ -24,6 +24,6 @@ export const auctionsCheck = async () => {
   });
 
   if (strings != "") {
-    Logger.pushEvent(AUCTIONS, `%%% \n - list: \n ${strings} \n %%% @slack-Acala-data-warn-bot`, "normal", "info");
+    Logger.pushEvent(`${AUCTIONS} ${env}`, `%%% \n - list: \n ${strings} \n %%% @slack-watchdog`, "normal", "info");
   }
 };

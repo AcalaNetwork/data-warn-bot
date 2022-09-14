@@ -2,19 +2,19 @@ import { Wallet } from "@acala-network/sdk/wallet";
 import { SubscribeBlock } from "@open-web3/scanner/types";
 import Koa from "koa";
 import { config } from "./config";
-import { relayChainTokenCheck, subLeastestHeader } from "./servers";
+import { relayChainTokenCheck } from "./servers";
 import { currenciesTransfers } from "./servers/currenciesTransfers";
 import { largecrossChainTransfers } from "./servers/largecrossChainTransfers";
-import { polkadotXcms } from "./servers/polkadotXcms";
 import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, PolkaApi, SCANNER_ERROR } from "./utils";
 import { removeLQ } from "./servers/removeLQ";
 import { redeemRequests } from "./servers/redeemRequests";
-import { loanLevel } from "./servers/loanLevel";
+import { loanLevel, requestAllLoans } from "./servers/loanLevel";
 import { auctionsCheck } from "./servers/auction";
-import { homaCheckWithKsm } from "./servers/homa";
-import { acalaHomaCheckWithKsm } from "./servers/acalaHoma";
+import { homaCheck } from "./servers/homa";
+import { acalaHomaCheck } from "./servers/acalaHoma";
 import { incenticesCheck } from "./servers/incenticesCheck";
 import { priceServer } from "./servers/priceServer";
+import { aUSDBalanceCheck } from "./servers/aUSDBalance";
 
 const app = new Koa();
 
@@ -27,46 +27,54 @@ app.listen(config.port, async () => {
   await PolkaApi.isReady;
   const KarWallet = new Wallet(KarApi);
   const AcaWallet = new Wallet(AcaApi);
-  initIntervalEvents(KarWallet, AcaWallet);
-  subChainEvents(KarWallet);
+
+  runloop(KarWallet, AcaWallet);
+  setupLogAgent();
+  // subChainEvents(KarWallet);
 });
 
-const initIntervalEvents = async (KarWallet: Wallet, AcaWallet: Wallet) => {
-  setInterval(() => {
-    priceServer();
-  }, 1000 * 60);
-
-  setInterval(() => {
-    // every 5 mins
-    relayChainTokenCheck(false);
-    // every 5 mins
-    // dexStatus(KarWallet);
-  }, 1000 * 60 * 10);
-
+const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
   setInterval(() => {
     const hour = new Date().getHours();
     // every 1 hour
     auctionsCheck();
+    auctionsCheck("ACALA");
 
     if (hour === 4 || hour === 12 || hour === 20) {
       // 4:00 12:00 20:00
       loanLevel(KarWallet);
       // 4:00 12:00 20:00
-      redeemRequests();
+      // redeemRequests();
     }
-    if (hour === 10) {
-      // info in 10 mins
-      relayChainTokenCheck(true);
-      // check incentives
-      incenticesCheck(KarWallet, AcaWallet);
-    }
+    // if (hour === 10) {
+    //   // info in 10 mins
+    //   relayChainTokenCheck(true);
+    //   // check incentives
+    //   incenticesCheck(KarWallet, AcaWallet);
+    // }
 
     if (hour === 2 || hour === 10 || hour === 18) {
       // 2:00 10:00 18:00
-      homaCheckWithKsm();
-      acalaHomaCheckWithKsm();
+      // homa check & send event
+      homaCheck();
+      acalaHomaCheck();
     }
   }, 1000 * 60 * 60);
+};
+
+const setupLogAgent = () => {
+  // send log to datadog every 10 mins
+  setInterval(() => {
+    // priceServer();
+
+    // relaychain balance check & send log
+    relayChainTokenCheck();
+    relayChainTokenCheck("DOT");
+
+    // aUSD balance check & send log
+    aUSDBalanceCheck();
+    aUSDBalanceCheck("ACALA");
+  }, 1000 * 60 * 10);
 };
 
 const subChainEvents = async (KarWallet: Wallet) => {
@@ -77,13 +85,11 @@ const subChainEvents = async (KarWallet: Wallet) => {
     }
     const block = header as SubscribeBlock;
 
-    subLeastestHeader(block);
+    // subLeastestHeader(block);
 
     block.result.extrinsics.forEach((ex) => {
       if (ex.section == "xTokens" && ex.method == "transfer" && ex.result === "ExtrinsicSuccess") {
         largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
-      } else if (ex.section == "polkadotXcm" && ex.result === "ExtrinsicSuccess") {
-        polkadotXcms(block.blockNumber, ex.method, ex.args, ex.index);
       } else if (ex.section == "dex" && ex.method == "removeLiquidity" && ex.result === "ExtrinsicSuccess") {
         removeLQ(block.blockNumber, ex.args, ex.index);
       }

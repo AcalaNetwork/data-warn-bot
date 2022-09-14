@@ -15,11 +15,11 @@ const ledger2 = "EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA";
  * send [error] message if check failed
  * send [info] message if check ok
  */
-export const homaCheckWithKsm = async () => {
+export const homaCheck = async () => {
   let strings = "";
   const karEra = await KarApi.query.homa.relayChainCurrentEra();
   const ksmEra = await KsmApi.query.staking.currentEra();
-  const eraCheckOk = Number(karEra.toString()) <= Number(ksmEra.toString());
+  const eraCheckOk = Number(karEra.toString()) + 1 >= Number(ksmEra.toString());
   let ksmUnlockingLenCheckOk = false;
   let percentCheckOk = false;
 
@@ -47,7 +47,7 @@ export const homaCheckWithKsm = async () => {
     const ksmBonded = _ksmBonded - MinNominatorBond;
     const ksmUnlockingLen = (ksmLedger.toJSON() as any).unlocking.length || 0;
 
-    ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && (unlockingLen === ksmUnlockingLen || unlockingLen + 1 === ksmUnlockingLen);
+    ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && unlockingLen + 1 >= ksmUnlockingLen;
 
     percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
@@ -60,8 +60,8 @@ export const homaCheckWithKsm = async () => {
     )} \n`;
   });
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
-    Logger.pushEvent(HOMA, `%%% \n ${strings} \n %%%  @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "error");
+    Logger.pushEvent(HOMA, `%%% \n ${strings} \n %%%  @slack-watchdog <@UPZRWB4UD>`, "normal", "error");
   } else {
-    Logger.pushEvent(HOMA, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "info");
+    Logger.pushEvent(HOMA, `%%% \n ${strings} \n %%% @slack-watchdog <@UPZRWB4UD>`, "normal", "info");
   }
 };

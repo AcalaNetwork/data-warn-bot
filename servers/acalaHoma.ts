@@ -2,11 +2,11 @@ import { AcaApi, PolkaApi, Logger, ACALA_HOMA } from "../utils";
 
 const ledger0 = "15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn";
 
-export const acalaHomaCheckWithKsm = async () => {
+export const acalaHomaCheck = async () => {
   let strings = "";
   const acaEra = await AcaApi.query.homa.relayChainCurrentEra();
   const polkaEra = await PolkaApi.query.staking.currentEra();
-  const eraCheckOk = Number(acaEra.toString()) <= Number(polkaEra.toString());
+  const eraCheckOk = Number(acaEra.toString()) + 1 >= Number(polkaEra.toString());
   let ksmUnlockingLenCheckOk = false;
   let percentCheckOk = false;
 
@@ -32,7 +32,7 @@ export const acalaHomaCheckWithKsm = async () => {
     const ksmBonded = _ksmBonded - MinNominatorBond;
     const ksmUnlockingLen = (ksmLedger?.toJSON() as any)?.unlocking.length || 0;
 
-    ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && (unlockingLen === ksmUnlockingLen || unlockingLen + 1 === ksmUnlockingLen);
+    ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && unlockingLen + 1 >= ksmUnlockingLen;
 
     percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
 
@@ -45,8 +45,8 @@ export const acalaHomaCheckWithKsm = async () => {
     )} \n`;
   });
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
-    Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "error");
+    Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-watchdog <@UPZRWB4UD>`, "normal", "error");
   } else {
-    Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot <@UPZRWB4UD>`, "normal", "info");
+    Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-watchdog <@UPZRWB4UD>`, "normal", "info");
   }
 };

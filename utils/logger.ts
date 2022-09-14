@@ -1,11 +1,14 @@
 import moment from "moment";
-import { v1 } from "@datadog/datadog-api-client";
+import { v1, v2 } from "@datadog/datadog-api-client";
 import { EventPriority } from "@datadog/datadog-api-client/dist/packages/datadog-api-client-v1/models/EventPriority";
 import { EventAlertType } from "@datadog/datadog-api-client/dist/packages/datadog-api-client-v1/models/EventAlertType";
 import { config } from "../config";
 
 const configuration = v1.createConfiguration();
 const events = new v1.EventsApi(configuration);
+
+const logger = new v1.LogsApi(configuration);
+// const logger = new v2.LogsApi(v2.createConfiguration());
 
 // socket error
 export const API_ERROR = "[API_ERROR] Apipromise Create Error";
@@ -57,3 +60,31 @@ export class Logger {
     }
   }
 }
+
+declare interface WatchDogMessage {
+  level: "info" | "warn" | "error";
+  value: any;
+  title: string;
+  message: string;
+  timestamp: string;
+}
+
+export const watchDogLog = (message: WatchDogMessage, tags: string) => {
+  logger
+    .submitLog({
+      body: [
+        {
+          ddsource: "nodejs",
+          ddtags: tags,
+          message: JSON.stringify(message),
+          service: "data-warn-bot",
+          hostname: config.host,
+        },
+      ],
+      contentEncoding: "deflate",
+    })
+    .then((_) => {
+      console.log(`Send log ${message.title}.`);
+    })
+    .catch((error: any) => console.error(error));
+};
