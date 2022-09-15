@@ -5,15 +5,12 @@ import { config } from "./config";
 import { relayChainTokenCheck } from "./servers";
 import { currenciesTransfers } from "./servers/currenciesTransfers";
 import { largecrossChainTransfers } from "./servers/largecrossChainTransfers";
-import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, PolkaApi, SCANNER_ERROR } from "./utils";
+import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, PolkaApi } from "./utils";
 import { removeLQ } from "./servers/removeLQ";
-import { redeemRequests } from "./servers/redeemRequests";
-import { loanLevel, requestAllLoans } from "./servers/loanLevel";
+import { loanLevel } from "./servers/loanLevel";
 import { auctionsCheck } from "./servers/auction";
 import { homaCheck } from "./servers/homa";
 import { acalaHomaCheck } from "./servers/acalaHoma";
-import { incenticesCheck } from "./servers/incenticesCheck";
-import { priceServer } from "./servers/priceServer";
 import { aUSDBalanceCheck } from "./servers/aUSDBalance";
 
 const app = new Koa();
@@ -84,8 +81,6 @@ const subChainEvents = async (KarWallet: Wallet) => {
       return Logger.error("Subscribe Block Error");
     }
     const block = header as SubscribeBlock;
-
-    // subLeastestHeader(block);
 
     block.result.extrinsics.forEach((ex) => {
       if (ex.section == "xTokens" && ex.method == "transfer" && ex.result === "ExtrinsicSuccess") {
