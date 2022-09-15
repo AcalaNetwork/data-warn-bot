@@ -42,16 +42,14 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
 - Issuance without Specified: ${issuanceWithoutSpecified}
 - BadDebt: ${badDebt}`;
   console.log(badDebtMsg, badDebtRatio);
-  if (env !== "ACALA") {
-    watchDogLog(
-      {
-        level: "info",
-        title: `${token}-bad-debt`,
-        message: badDebtMsg,
-        value: parseFloat(badDebtRatio.toFixed(6)),
-        timestamp: new Date().toUTCString(),
-      },
-      `env:${env},env:mainnet`
-    );
-  }
+  watchDogLog(
+    {
+      level: "info",
+      title: `${token}-bad-debt`,
+      message: badDebtMsg,
+      value: parseFloat(badDebtRatio.toFixed(6)),
+      timestamp: new Date().toUTCString(),
+    },
+    `env:${env},env:mainnet`
+  );
 };
