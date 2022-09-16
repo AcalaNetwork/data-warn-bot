@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon index.ts",
+    "start": "nodemon ./dist/index.js",
     "serve": "pm2-runtime start pm2.config.js",
     "start:pro": "yarn run serve",
-    "build": "rm -rf ./dist && tsc"
+    "build": "rm -rf ./dist && tsc --downlevelIteration"
   },
   "author": "",
   "license": "ISC",
@@ -30,10 +30,12 @@
     "koa": "^2.13.4",
     "moment": "^2.29.1",
     "node-schedule": "^2.1.0",
-    "pm2": "^5.1.2"
+    "pm2": "^5.1.2",
+    "ws": "^8.8.1"
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",
+    "@types/ws": "^8.5.3",
     "nodemon": "^2.0.14",
     "typescript": "^4.4.4"
   },

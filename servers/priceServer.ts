@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Logger, PRICE_SERVER, watchDogLog } from "../utils";
-import { sendAlert } from "../utils";
 
 export const priceServer = async () => {
   // const data = await axios.get("https://api.polkawallet.io/price-server/?token=KSM&from=market");
