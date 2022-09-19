@@ -38,11 +38,11 @@ export const acalaHomaCheck = async () => {
 
     strings += `- acala homa ledger #${ledgerNo}: bonded: ${bonded} \n`;
     strings += `- acala subaccount #${ledgerNo}: bonded: ${ksmBonded} \n`;
-    strings += `- acala homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('"', "g"), "")} \n`;
-    strings += `- acala subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(
-      RegExp('"', "g"),
-      ""
-    )} \n`;
+    // strings += `- acala homa ledger #${ledgerNo}: \n ${JSON.stringify((data.toJSON() as any).unlocking).replace(RegExp('"', "g"), "")} \n`;
+    // strings += `- acala subaccount #${ledgerNo}: \n ${JSON.stringify((ksmLedger.toJSON() as any).unlocking).replace(
+    //   RegExp('"', "g"),
+    //   ""
+    // )} \n`;
   });
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
     Logger.pushEvent(ACALA_HOMA, `%%% \n ${strings} \n %%% @slack-watchdog <@UPZRWB4UD>`, "normal", "error");

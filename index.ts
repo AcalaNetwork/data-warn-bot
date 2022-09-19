@@ -12,6 +12,7 @@ import { auctionsCheck } from "./servers/auction";
 import { homaCheck } from "./servers/homa";
 import { acalaHomaCheck } from "./servers/acalaHoma";
 import { aUSDBalanceCheck } from "./servers/aUSDBalance";
+import { pushTelemetryLog, startTelemetry } from "./servers/telemetry";
 
 const app = new Koa();
 
@@ -60,10 +61,11 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
 };
 
 const setupLogAgent = () => {
+  startTelemetry();
+  startTelemetry("ACALA");
+
   // send log to datadog every 10 mins
   setInterval(() => {
-    // priceServer();
-
     // relaychain balance check & send log
     relayChainTokenCheck();
     relayChainTokenCheck("DOT");
@@ -71,6 +73,10 @@ const setupLogAgent = () => {
     // aUSD balance check & send log
     aUSDBalanceCheck();
     aUSDBalanceCheck("ACALA");
+
+    // telemetry check & send log
+    pushTelemetryLog();
+    pushTelemetryLog("ACALA");
   }, 1000 * 60 * 10);
 };
 

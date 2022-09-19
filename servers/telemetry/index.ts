@@ -2,6 +2,8 @@ import { Connection } from "./Connection";
 import { SortedCollection } from "./common";
 import { GenesisHash } from "./common/types";
 import { Node } from "./state";
+import { watchDogLog } from "../../utils";
+import { config } from "../../config";
 
 const acalaState = {
   ACALA: {
@@ -23,11 +25,26 @@ export const startTelemetry = (network: AcalaNetwork = "KARURA") => {
 };
 
 export const pushTelemetryLog = (network: AcalaNetwork = "KARURA") => {
-  const nodesHeight = acalaState[network].nodes.list.map((e) => e.height);
-  // const nodesFinalized = acalaState[network].nodes.list.map((e) => e.finalized);
-  const heightSorted = nodesHeight.sort((a, b) => (a > b ? -1 : 1));
-  console.log(nodesHeight.length);
-  console.log(heightSorted);
-  const notSyncNodes = heightSorted.filter((e) => e + 10 < heightSorted[0]);
-  console.log(notSyncNodes);
+  const ownNodes = acalaState[network].nodes.list.filter((e) => config.nodeIDs[network].includes(e.networkId as string));
+
+  const heightSorted = ownNodes.sort((a, b) => (a.height > b.height ? -1 : 1));
+  const notSyncNodes = heightSorted.filter((e) => e.height + 10 < heightSorted[0].height);
+
+  let logMsg = `${network} nodes check:
+- Detected/All nodes: ${ownNodes.length}/${config.nodeIDs[network].length}
+- Synced/Unsynced: ${ownNodes.length - notSyncNodes.length}/${notSyncNodes.length}`;
+  if (notSyncNodes.length > 0) {
+    logMsg += `- Unsynced: [${notSyncNodes.map((e) => e.name).join(",")}]`;
+  }
+  console.log(logMsg);
+  watchDogLog(
+    {
+      level: "info",
+      title: `${network}-node-telemetry`,
+      message: logMsg,
+      value: notSyncNodes.length,
+      timestamp: new Date().toUTCString(),
+    },
+    `env:${network},env:mainnet`
+  );
 };
