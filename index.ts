@@ -64,20 +64,25 @@ const setupLogAgent = () => {
   startTelemetry();
   startTelemetry("ACALA");
 
+  logAgentTick(true);
   // send log to datadog every 10 mins
-  setInterval(() => {
-    // relaychain balance check & send log
-    relayChainTokenCheck();
-    relayChainTokenCheck("DOT");
+  setInterval(logAgentTick, 1000 * 60 * 10);
+};
 
-    // aUSD balance check & send log
-    aUSDBalanceCheck();
-    aUSDBalanceCheck("ACALA");
+const logAgentTick = (isFirstTick: boolean = false) => {
+  // relaychain balance check & send log
+  relayChainTokenCheck();
+  relayChainTokenCheck("DOT");
 
+  // aUSD balance check & send log
+  aUSDBalanceCheck();
+  aUSDBalanceCheck("ACALA");
+
+  if (!isFirstTick) {
     // telemetry check & send log
     pushTelemetryLog();
     pushTelemetryLog("ACALA");
-  }, 1000 * 60 * 10);
+  }
 };
 
 const subChainEvents = async (KarWallet: Wallet) => {
