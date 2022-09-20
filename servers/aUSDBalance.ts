@@ -9,7 +9,12 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
   const totalPos: any[] = await api.query.loans.totalPositions.entries();
   const exchangeRates: any[] = await Promise.all(totalPos.map(([key, _]) => api.query.cdpEngine.debitExchangeRate(key.toHuman()[0])));
   const totalMint = totalPos
-    .map(([_, { debit }], i) => debit.mul(exchangeRates[i].unwrapOrDefault()).div(new BN("1000000000000000000")))
+    .map(([_, { debit }], i) => {
+      const exchangeRate = exchangeRates[i].unwrapOrDefault();
+      return debit
+        .mul(exchangeRate.gt(BN_ZERO) ? exchangeRate : api.consts.cdpEngine.defaultDebitExchangeRate)
+        .div(new BN("1000000000000000000"));
+    })
     .reduce((a, b) => a.add(b), BN_ZERO)
     .div(divider);
   const badDebt = ((await api.query.cdpTreasury.debitPool()) as any).div(divider);
