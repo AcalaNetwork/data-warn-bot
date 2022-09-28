@@ -13,6 +13,7 @@ import { homaCheck } from "./servers/homa";
 import { acalaHomaCheck } from "./servers/acalaHoma";
 import { aUSDBalanceCheck } from "./servers/aUSDBalance";
 import { pushTelemetryLog, startTelemetry } from "./servers/telemetry";
+import { incenticesCheck } from "./servers/incenticesCheck";
 
 const app = new Koa();
 
@@ -44,12 +45,12 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
       // 4:00 12:00 20:00
       // redeemRequests();
     }
-    // if (hour === 10) {
-    //   // info in 10 mins
-    //   relayChainTokenCheck(true);
-    //   // check incentives
-    //   incenticesCheck(KarWallet, AcaWallet);
-    // }
+    if (hour === 10) {
+      // info in 10 mins
+      // relayChainTokenCheck(true);
+      // check incentives
+      incenticesCheck(KarWallet, AcaWallet);
+    }
 
     if (hour === 2 || hour === 10 || hour === 18) {
       // 2:00 10:00 18:00

@@ -27,7 +27,7 @@ export const incenticesCheck = async (KarWallet: Wallet, AcaWallet: Wallet) => {
     strings += `token: ${item}, balance: ${data.balance}, periodPay: ${data.periodPay}, paidableDays: ${data.paidableDays} \n`;
   });
 
-  Logger.pushEvent(INCENTIVES_BALANCE, `%%% \n ${strings} \n %%% @slack-Acala-data-warn-bot`, "normal", "info");
+  Logger.pushEvent(INCENTIVES_BALANCE, `%%% \n ${strings} \n %%% @slack-watchdog <@UPZRWB4UD>`, "normal", "info");
 };
 
 export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address: string) => {
