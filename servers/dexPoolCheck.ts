@@ -72,5 +72,10 @@ export const dexPoolCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
     strings += `  - 1 ${token0} = ${amount1.div(amount0).toNumber()} ${token1}\n`;
   });
 
-  Logger.pushEvent("[DEX_EXCHANGE_RATE] Dex Exchange Rate Check", `%%% \n ${strings} \n %%% @slack-watchdog`, "normal", "warning");
+  Logger.pushEvent(
+    "[DEX_EXCHANGE_RATE] Dex Exchange Rate Check",
+    `%%% \n ${strings} \n %%% @slack-watchdog <@UPKDQJL3U> <@UPKBVBC74>`,
+    "normal",
+    "warning"
+  );
 };
