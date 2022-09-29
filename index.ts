@@ -14,6 +14,7 @@ import { acalaHomaCheck } from "./servers/acalaHoma";
 import { aUSDBalanceCheck } from "./servers/aUSDBalance";
 import { pushTelemetryLog, startTelemetry } from "./servers/telemetry";
 import { incenticesCheck } from "./servers/incenticesCheck";
+import { dexPoolCheck } from "./servers/dexPoolCheck";
 
 const app = new Koa();
 
@@ -29,7 +30,6 @@ app.listen(config.port, async () => {
 
   runloop(KarWallet, AcaWallet);
   setupLogAgent();
-  // subChainEvents(KarWallet);
 });
 
 const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
@@ -84,6 +84,9 @@ const logAgentTick = (isFirstTick: boolean = false) => {
     pushTelemetryLog();
     pushTelemetryLog("ACALA");
   }
+
+  // TODO: this dex pool check is temp
+  dexPoolCheck("ACALA");
 };
 
 const subChainEvents = async (KarWallet: Wallet) => {
