@@ -5,7 +5,7 @@ import { config } from "./config";
 import { relayChainTokenCheck } from "./servers";
 import { currenciesTransfers } from "./servers/currenciesTransfers";
 import { largecrossChainTransfers } from "./servers/largecrossChainTransfers";
-import { AcaApi, KarApi, KarProvider, KarScanner, KsmApi, Logger, PolkaApi } from "./utils";
+import { getAcaApi, getKarApi, getKarScanner, Logger, connectNodes } from "./utils";
 import { removeLQ } from "./servers/removeLQ";
 import { loanLevel } from "./servers/loanLevel";
 import { auctionsCheck } from "./servers/auction";
@@ -14,19 +14,17 @@ import { acalaHomaCheck } from "./servers/acalaHoma";
 import { aUSDBalanceCheck } from "./servers/aUSDBalance";
 import { pushTelemetryLog, startTelemetry } from "./servers/telemetry";
 import { incenticesCheck } from "./servers/incenticesCheck";
-import { dexPoolCheck } from "./servers/dexPoolCheck";
+import { referendumCheck } from "./servers/referendumCheck";
+// import { dexPoolCheck } from "./servers/dexPoolCheck";
 
 const app = new Koa();
 
 app.listen(config.port, async () => {
   console.log("Server [data-warn-bot] start at: ", config.port);
-  await KarProvider.isReady;
-  await KarApi.isReady;
-  await KsmApi.isReady;
-  await AcaApi.isReady;
-  await PolkaApi.isReady;
-  const KarWallet = new Wallet(KarApi);
-  const AcaWallet = new Wallet(AcaApi);
+  await connectNodes();
+
+  const KarWallet = new Wallet(getKarApi());
+  const AcaWallet = new Wallet(getAcaApi());
 
   runloop(KarWallet, AcaWallet);
   setupLogAgent();
@@ -38,6 +36,9 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
     // every 1 hour
     auctionsCheck();
     auctionsCheck("ACALA");
+
+    referendumCheck();
+    referendumCheck("ACALA");
 
     if (hour === 4 || hour === 12 || hour === 20) {
       // 4:00 12:00 20:00
@@ -86,29 +87,31 @@ const logAgentTick = (isFirstTick: boolean = false) => {
   }
 
   // TODO: this dex pool check is temp
-  dexPoolCheck("ACALA");
+  // dexPoolCheck("ACALA");
 };
 
 const subChainEvents = async (KarWallet: Wallet) => {
-  KarScanner.subscribe().subscribe((header) => {
-    if (header.error != null && header.result === null) {
-      // Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');
-      return Logger.error("Subscribe Block Error");
-    }
-    const block = header as SubscribeBlock;
-
-    block.result.extrinsics.forEach((ex) => {
-      if (ex.section == "xTokens" && ex.method == "transfer" && ex.result === "ExtrinsicSuccess") {
-        largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
-      } else if (ex.section == "dex" && ex.method == "removeLiquidity" && ex.result === "ExtrinsicSuccess") {
-        removeLQ(block.blockNumber, ex.args, ex.index);
+  getKarScanner()
+    .subscribe()
+    .subscribe((header) => {
+      if (header.error != null && header.result === null) {
+        // Logger.pushEvent(SCANNER_ERROR, 'Subscribe Block Error', 'normal', 'warning');
+        return Logger.error("Subscribe Block Error");
       }
-    });
+      const block = header as SubscribeBlock;
 
-    block.result.events.forEach((ev) => {
-      if (ev.section == "currencies" && ev.method == "Transferred") {
-        currenciesTransfers(KarWallet, block.blockNumber, ev);
-      }
+      block.result.extrinsics.forEach((ex) => {
+        if (ex.section == "xTokens" && ex.method == "transfer" && ex.result === "ExtrinsicSuccess") {
+          largecrossChainTransfers(block.blockNumber, ex.args, ex.index);
+        } else if (ex.section == "dex" && ex.method == "removeLiquidity" && ex.result === "ExtrinsicSuccess") {
+          removeLQ(block.blockNumber, ex.args, ex.index);
+        }
+      });
+
+      block.result.events.forEach((ev) => {
+        if (ev.section == "currencies" && ev.method == "Transferred") {
+          currenciesTransfers(KarWallet, block.blockNumber, ev);
+        }
+      });
     });
-  });
 };

@@ -2,7 +2,7 @@ import { Wallet } from "@acala-network/sdk";
 import { FixedPointNumber } from "@acala-network/sdk-core";
 import { BN_ZERO } from "@polkadot/util";
 import { config } from "../config";
-import { DANGER_LOAN_POSITION, KarApi, Logger } from "../utils";
+import { DANGER_LOAN_POSITION, getKarApi, Logger } from "../utils";
 // send wrong message to datadog time;
 const timing = 1000 * 60 * 60 * 8;
 
@@ -25,7 +25,7 @@ interface Position {
 
 export const requestAllLoans = async (): Promise<Position[]> => {
   const loanTypes = ["KSM", "LKSM"];
-  const allLoans: any[][] = await Promise.all(loanTypes.map((token) => KarApi.query.loans.positions.entries({ Token: token })));
+  const allLoans: any[][] = await Promise.all(loanTypes.map((token) => getKarApi().query.loans.positions.entries({ Token: token })));
   return allLoans.reduce((a, b, i) => {
     const loans = b
       .filter(([_, { debit }]) => debit.gt(BN_ZERO))
@@ -42,11 +42,11 @@ export const requestAllLoans = async (): Promise<Position[]> => {
 };
 
 const requestParams = async () => {
-  const [_debitExchangeRateKSM, _debitExchangeRateLKSM, _collateralParamsKSM, _collateralParamsLKSM] = (await KarApi.queryMulti([
-    [KarApi.query.cdpEngine.debitExchangeRate, { Token: "KSM" }],
-    [KarApi.query.cdpEngine.debitExchangeRate, { Token: "LKSM" }],
-    [KarApi.query.cdpEngine.collateralParams, { Token: "KSM" }],
-    [KarApi.query.cdpEngine.collateralParams, { Token: "LKSM" }],
+  const [_debitExchangeRateKSM, _debitExchangeRateLKSM, _collateralParamsKSM, _collateralParamsLKSM] = (await getKarApi().queryMulti([
+    [getKarApi().query.cdpEngine.debitExchangeRate, { Token: "KSM" }],
+    [getKarApi().query.cdpEngine.debitExchangeRate, { Token: "LKSM" }],
+    [getKarApi().query.cdpEngine.collateralParams, { Token: "KSM" }],
+    [getKarApi().query.cdpEngine.collateralParams, { Token: "LKSM" }],
   ])) as [any, any, CollateralParams, CollateralParams];
 
   return {

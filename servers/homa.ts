@@ -1,4 +1,4 @@
-import { HOMA, KarApi, KsmApi, Logger } from "../utils";
+import { HOMA, getKarApi, getKsmApi, Logger } from "../utils";
 // send wrong message to datadog time;
 const timing = 1000 * 60 * 60 * 6;
 
@@ -17,18 +17,18 @@ const ledger2 = "EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA";
  */
 export const homaCheck = async () => {
   let strings = "";
-  const karEra = await KarApi.query.homa.relayChainCurrentEra();
-  const ksmEra = await KsmApi.query.staking.currentEra();
+  const karEra = await getKarApi().query.homa.relayChainCurrentEra();
+  const ksmEra = await getKsmApi().query.staking.currentEra();
   const eraCheckOk = Number(karEra.toString()) + 1 >= Number(ksmEra.toString());
   let ksmUnlockingLenCheckOk = false;
   let percentCheckOk = false;
 
-  const karLedgerss = await KarApi.query.homa.stakingLedgers.entries();
-  const ksmLedgers0 = await KsmApi.query.staking.ledger(ledger0);
-  const ksmLedgers1 = await KsmApi.query.staking.ledger(ledger1);
-  const ksmLedgers2 = await KsmApi.query.staking.ledger(ledger2);
+  const karLedgerss = await getKarApi().query.homa.stakingLedgers.entries();
+  const ksmLedgers0 = await getKsmApi().query.staking.ledger(ledger0);
+  const ksmLedgers1 = await getKsmApi().query.staking.ledger(ledger1);
+  const ksmLedgers2 = await getKsmApi().query.staking.ledger(ledger2);
 
-  const _MinNominatorBond = await KsmApi.query.staking.minNominatorBond();
+  const _MinNominatorBond = await getKsmApi().query.staking.minNominatorBond();
   const MinNominatorBond = Number(_MinNominatorBond.toString());
 
   strings += "## Era Check \n";

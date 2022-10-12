@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "nodemon ./dist/index.js",
-    "serve": "pm2-runtime start pm2.config.js",
+    "serve": "ts-node ./index.ts",
     "start:pro": "yarn run serve",
     "build": "rm -rf ./dist && tsc --downlevelIteration"
   },
@@ -23,14 +23,12 @@
     "@polkadot/wasm-crypto": "^6.0.1",
     "@polkadot/wasm-crypto-asmjs": "^6.0.2-7",
     "@scure/base": "^1.0.0",
-    "@types/node-schedule": "^2.1.0",
     "axios": "^0.24.0",
     "graphql": "^16.0.1",
     "graphql-request": "3.5.0",
     "koa": "^2.13.4",
     "moment": "^2.29.1",
-    "node-schedule": "^2.1.0",
-    "pm2": "^5.1.2",
+    "ts-node": "^10.9.1",
     "ws": "^8.8.1"
   },
   "devDependencies": {

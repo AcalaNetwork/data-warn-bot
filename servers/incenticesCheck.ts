@@ -1,7 +1,7 @@
 import { Wallet } from "@acala-network/sdk";
 import { FixedPointNumber, forceToCurrencyName } from "@acala-network/sdk-core";
 import { ApiPromise } from "@polkadot/api";
-import { AcaApi, INCENTIVES_BALANCE, KarApi, Logger } from "../utils";
+import { getAcaApi, INCENTIVES_BALANCE, getKarApi, Logger } from "../utils";
 
 // karura qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a
 // acala  23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit
@@ -10,8 +10,8 @@ import { AcaApi, INCENTIVES_BALANCE, KarApi, Logger } from "../utils";
 /// how many days the payout will go.
 /// send [info] message every day at 9:00 am.
 export const incenticesCheck = async (KarWallet: Wallet, AcaWallet: Wallet) => {
-  const karura = await _incenticesCheck(KarApi, KarWallet, "qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a");
-  const acala = await _incenticesCheck(AcaApi, AcaWallet, "23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit");
+  const karura = await _incenticesCheck(getKarApi(), KarWallet, "qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a");
+  const acala = await _incenticesCheck(getAcaApi(), AcaWallet, "23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit");
 
   let strings = "";
 

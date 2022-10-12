@@ -1,19 +1,19 @@
-import { AcaApi, PolkaApi, Logger, ACALA_HOMA } from "../utils";
+import { getAcaApi, getPolkaApi, Logger, ACALA_HOMA } from "../utils";
 
 const ledger0 = "15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn";
 
 export const acalaHomaCheck = async () => {
   let strings = "";
-  const acaEra = await AcaApi.query.homa.relayChainCurrentEra();
-  const polkaEra = await PolkaApi.query.staking.currentEra();
+  const acaEra = await getAcaApi().query.homa.relayChainCurrentEra();
+  const polkaEra = await getPolkaApi().query.staking.currentEra();
   const eraCheckOk = Number(acaEra.toString()) + 1 >= Number(polkaEra.toString());
   let ksmUnlockingLenCheckOk = false;
   let percentCheckOk = false;
 
-  const karLedgerss = await AcaApi.query.homa.stakingLedgers.entries();
-  const ksmLedgers0 = await PolkaApi.query.staking.ledger(ledger0);
+  const karLedgerss = await getAcaApi().query.homa.stakingLedgers.entries();
+  const ksmLedgers0 = await getPolkaApi().query.staking.ledger(ledger0);
 
-  const _MinNominatorBond = await PolkaApi.query.staking.minNominatorBond();
+  const _MinNominatorBond = await getPolkaApi().query.staking.minNominatorBond();
   const MinNominatorBond = Number(_MinNominatorBond.toString());
 
   strings += "## Era Check \n";

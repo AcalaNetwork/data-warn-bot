@@ -1,4 +1,4 @@
-import { AcaApi, KarApi, Logger } from "../utils";
+import { getAcaApi, getKarApi, Logger } from "../utils";
 import { FixedPointNumber as FN } from "@acala-network/sdk-core";
 
 function getTokenName(raw: string) {
@@ -55,7 +55,7 @@ function getTokenDecimals(token: string) {
 }
 
 export const dexPoolCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
-  const api = env === "KARURA" ? KarApi : AcaApi;
+  const api = env === "KARURA" ? getKarApi() : getAcaApi();
   const dexPoolInfo = await api.query.dex.liquidityPool.entries();
   let strings = "";
   dexPoolInfo.forEach(([k, v]) => {

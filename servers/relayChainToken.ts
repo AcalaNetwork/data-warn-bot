@@ -1,5 +1,5 @@
 import { config } from "../config";
-import { AcaApi, KarApi, KsmApi, PolkaApi, watchDogLog } from "../utils";
+import { getAcaApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
 import { FixedPointNumber } from "@acala-network/sdk-core";
 
 /// check DOT/KSM balance between parachain-account and total-issuance,
@@ -11,10 +11,10 @@ export const relayChainTokenCheck = async (token: "KSM" | "DOT" = "KSM") => {
   const relayChain = token === "KSM" ? "kusama" : "polkadot";
   const env = token === "KSM" ? "karura" : "acala";
   if (token === "KSM") {
-    const ksmAccount = await KsmApi.query.system.account(config.ksm.account);
+    const ksmAccount = await getKsmApi().query.system.account(config.ksm.account);
     const ksmBalance = FixedPointNumber.fromInner((ksmAccount as any).data.free.toString(), config.ksm.decimal);
 
-    const _karBalance = await KarApi.query.tokens.totalIssuance({ Token: "KSM" });
+    const _karBalance = await getKarApi().query.tokens.totalIssuance({ Token: "KSM" });
     const karBalance = FixedPointNumber.fromInner(_karBalance.toString(), config.ksm.decimal);
 
     diff = karBalance.sub(ksmBalance);
@@ -24,10 +24,10 @@ export const relayChainTokenCheck = async (token: "KSM" | "DOT" = "KSM") => {
 - Difference (${env} - ${relayChain}): ${diff.toNumber(4)}
 - Difference Ratio: ${diffRatio}`;
   } else {
-    const polkaAccount = await PolkaApi.query.system.account(config.ksm.account);
+    const polkaAccount = await getPolkaApi().query.system.account(config.ksm.account);
     const polkaBalance = FixedPointNumber.fromInner((polkaAccount as any).data.free.toString(), 10);
 
-    const _acaBalance = await AcaApi.query.tokens.totalIssuance({ Token: "DOT" });
+    const _acaBalance = await getAcaApi().query.tokens.totalIssuance({ Token: "DOT" });
     const acaBalance = FixedPointNumber.fromInner(_acaBalance.toString(), 10);
 
     diff = acaBalance.sub(polkaBalance);

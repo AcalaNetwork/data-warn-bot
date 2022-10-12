@@ -1,10 +1,10 @@
 import { BN, BN_ZERO } from "@polkadot/util";
-import { AcaApi, KarApi, watchDogLog } from "../utils";
+import { getAcaApi, getKarApi, watchDogLog } from "../utils";
 
 export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
   const divider = new BN(1_000_000_000_000);
   const token = env === "KARURA" ? "KUSD" : "AUSD";
-  const api = env === "KARURA" ? KarApi : AcaApi;
+  const api = env === "KARURA" ? getKarApi() : getAcaApi();
   const issuance: any = ((await api.query.tokens.totalIssuance({ Token: token })) as any).div(divider);
   const totalPos: any[] = await api.query.loans.totalPositions.entries();
   const exchangeRates: any[] = await Promise.all(totalPos.map(([key, _]) => api.query.cdpEngine.debitExchangeRate(key.toHuman()[0])));

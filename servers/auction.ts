@@ -1,4 +1,4 @@
-import { AcaApi, AUCTIONS, KarApi, Logger } from "../utils";
+import { getAcaApi, AUCTIONS, getKarApi, Logger } from "../utils";
 
 export interface IAuction {
   id: string;
@@ -14,7 +14,7 @@ export interface IAuction {
 export const auctionsCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
   let strings = "";
 
-  const api = env === "KARURA" ? KarApi : AcaApi;
+  const api = env === "KARURA" ? getKarApi() : getAcaApi();
   const data = await api.query.auction.auctions.entries();
   data.forEach((item) => {
     const [auctionId, auctionInfo] = item;
