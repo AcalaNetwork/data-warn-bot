@@ -1,6 +1,5 @@
 node_modules/
 package-lock*
-config.ts
 pm2.config.js
 nodemon*
 dist/

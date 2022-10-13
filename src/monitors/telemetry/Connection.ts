@@ -204,7 +204,6 @@ export class Connection {
   };
 
   private bindSocket() {
-    console.log("Connected");
     // Disconnect if no messages are received in 60s:
     this.messageTimeout = resettableTimeout(this.handleDisconnect, MESSAGE_TIMEOUT);
     // Ping periodically to keep the above happy even if no other data is coming in:

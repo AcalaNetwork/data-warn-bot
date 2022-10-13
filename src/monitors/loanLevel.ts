@@ -73,7 +73,6 @@ const requestPrice = async (KarWallet: Wallet) => {
 
 /// query KSM/LKSM loan positions on Karura,
 /// send [warn] message if any position below required collateral ratio.
-/// query data from subql(may not be available).
 export const loanLevel = async (KarWallet: Wallet) => {
   const totalLoans = await requestAllLoans();
   const price = await requestPrice(KarWallet);

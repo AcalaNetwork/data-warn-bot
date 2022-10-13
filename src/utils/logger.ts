@@ -1,7 +1,6 @@
 import { EventAlertType } from "@datadog/datadog-api-client/dist/packages/datadog-api-client-v1/models/EventAlertType";
 import { EventPriority } from "@datadog/datadog-api-client/dist/packages/datadog-api-client-v1/models/EventPriority";
 import { client, v1 } from "@datadog/datadog-api-client";
-import { config } from "../config";
 import moment from "moment";
 
 const configuration = client.createConfiguration();
@@ -67,7 +66,7 @@ export class Logger {
 
     try {
       events.createEvent({
-        body: { title, text, priority, alertType, host: config.host },
+        body: { title, text, priority, alertType },
       });
     } catch (error) {
       Logger.error("Datadog error");
@@ -94,7 +93,6 @@ export const watchDogLog = (message: WatchDogMessage, tags: string) => {
           ddtags: tags,
           message: JSON.stringify(message),
           service: "data-warn-bot",
-          hostname: config.host,
         },
       ],
       contentEncoding: "deflate",

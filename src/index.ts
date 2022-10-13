@@ -1,15 +1,15 @@
 import { Wallet } from "@acala-network/sdk/wallet";
-import { aUSDBalanceCheck } from "./servers/aUSDBalance";
-import { acalaHomaCheck } from "./servers/acalaHoma";
-import { auctionsCheck } from "./servers/auction";
+import { aUSDBalanceCheck } from "./monitors/aUSDBalance";
+import { acalaHomaCheck } from "./monitors/acalaHoma";
+import { auctionsCheck } from "./monitors/auction";
 import { config } from "./config";
 import { connectNodes, getAcaApi, getKarApi } from "./utils";
-import { homaCheck } from "./servers/homa";
-import { incenticesCheck } from "./servers/incenticesCheck";
-import { loanLevel } from "./servers/loanLevel";
-import { pushTelemetryLog, startTelemetry } from "./servers/telemetry";
-import { referendumCheck } from "./servers/referendumCheck";
-import { relayChainTokenCheck } from "./servers";
+import { homaCheck } from "./monitors/homa";
+import { incenticesCheck } from "./monitors/incenticesCheck";
+import { loanLevel } from "./monitors/loanLevel";
+import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
+import { referendumCheck } from "./monitors/referendumCheck";
+import { relayChainTokenCheck } from "./monitors";
 import Koa from "koa";
 // import { dexPoolCheck } from "./servers/dexPoolCheck";
 
