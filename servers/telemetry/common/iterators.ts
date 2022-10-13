@@ -14,27 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export function* map<T, U>(
-  iter: IterableIterator<T>,
-  fn: (item: T) => U
-): IterableIterator<U> {
+export function* map<T, U>(iter: IterableIterator<T>, fn: (item: T) => U): IterableIterator<U> {
   for (const item of iter) {
     yield fn(item);
   }
 }
 
-export function* chain<T>(
-  a: IterableIterator<T>,
-  b: IterableIterator<T>
-): IterableIterator<T> {
+export function* chain<T>(a: IterableIterator<T>, b: IterableIterator<T>): IterableIterator<T> {
   yield* a;
   yield* b;
 }
 
-export function* zip<T, U>(
-  a: IterableIterator<T>,
-  b: IterableIterator<U>
-): IterableIterator<[T, U]> {
+export function* zip<T, U>(a: IterableIterator<T>, b: IterableIterator<U>): IterableIterator<[T, U]> {
   let itemA = a.next();
   let itemB = b.next();
 
@@ -46,10 +37,7 @@ export function* zip<T, U>(
   }
 }
 
-export function* take<T>(
-  iter: IterableIterator<T>,
-  n: number
-): IterableIterator<T> {
+export function* take<T>(iter: IterableIterator<T>, n: number): IterableIterator<T> {
   for (const item of iter) {
     if (n-- === 0) {
       return;
@@ -59,20 +47,15 @@ export function* take<T>(
   }
 }
 
-export function skip<T>(
-  iter: IterableIterator<T>,
-  n: number
-): IterableIterator<T> {
-  while (n-- !== 0 && !iter.next().done) {}
+export function skip<T>(iter: IterableIterator<T>, n: number): IterableIterator<T> {
+  while (n-- !== 0 && !iter.next().done) {
+    // do nothing
+  }
 
   return iter;
 }
 
-export function reduce<T, R>(
-  iter: IterableIterator<T>,
-  fn: (accu: R, item: T) => R,
-  accumulator: R
-): R {
+export function reduce<T, R>(iter: IterableIterator<T>, fn: (accu: R, item: T) => R, accumulator: R): R {
   for (const item of iter) {
     accumulator = fn(accumulator, item);
   }
@@ -80,14 +63,11 @@ export function reduce<T, R>(
   return accumulator;
 }
 
-export function join(
-  iter: IterableIterator<{ toString: () => string }>,
-  glue: string
-): string {
+export function join(iter: IterableIterator<{ toString: () => string }>, glue: string): string {
   const first = iter.next();
 
   if (first.done) {
-    return '';
+    return "";
   }
 
   let result = first.value.toString();

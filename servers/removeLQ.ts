@@ -1,9 +1,12 @@
+import { Logger, REMOVE_LIQUID_STAKING, generateDexToken, getKarApi } from "../utils";
 import { forceToDexShareCurrencyId } from "@acala-network/sdk-core";
-import { generateDexToken, getKarApi, Logger, REMOVE_LIQUID_STAKING } from "../utils";
 
 export const removeLQ = async (height: number, args: any, index: number) => {
   const { currency_id_a, currency_id_b, remove_share } = args;
-  const dexToken = forceToDexShareCurrencyId(getKarApi() as any, [generateDexToken(currency_id_a), generateDexToken(currency_id_b)]);
+  const dexToken = forceToDexShareCurrencyId(getKarApi() as any, [
+    generateDexToken(currency_id_a),
+    generateDexToken(currency_id_b),
+  ]);
   const _toalInstance = await getKarApi().query.tokens.totalIssuance(dexToken);
   const toalInstance = parseInt(_toalInstance.toString());
   const percent = remove_share / toalInstance;

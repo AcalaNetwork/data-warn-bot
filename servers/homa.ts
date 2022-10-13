@@ -1,6 +1,4 @@
-import { HOMA, getKarApi, getKsmApi, Logger } from "../utils";
-// send wrong message to datadog time;
-const timing = 1000 * 60 * 60 * 6;
+import { HOMA, Logger, getKarApi, getKsmApi } from "../utils";
 
 const ledger0 = "HTAeD1dokCVs9MwnC1q9s2a7d2kQ52TAjrxE1y5mj5MFLLA";
 const ledger1 = "FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL";

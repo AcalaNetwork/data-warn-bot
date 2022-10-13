@@ -1,4 +1,4 @@
-import { getAcaApi, INCENTIVES, getKarApi, Logger } from "../utils";
+import { INCENTIVES, Logger, getAcaApi, getKarApi } from "../utils";
 
 // removed
 export const checkIncentives = async () => {
@@ -27,7 +27,10 @@ export const checkIncentives = async () => {
     strings += `- ${token},  balance(free): ${free.toString()} \n`;
   });
 
-  const _strings = strings.replace(new RegExp('"', "g"), "").replace(new RegExp("{", "g"), "").replace(new RegExp("}", "g"), "");
+  const _strings = strings
+    .replace(new RegExp('"', "g"), "")
+    .replace(new RegExp("{", "g"), "")
+    .replace(new RegExp("}", "g"), "");
 
   Logger.pushEvent(INCENTIVES, `%%% \n  ${_strings} \n %%%`, "normal", "info");
 };

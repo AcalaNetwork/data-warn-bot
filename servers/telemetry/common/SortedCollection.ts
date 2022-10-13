@@ -101,6 +101,7 @@ export function sortedIndexOf<T>(item: T, within: Array<T>, compare: Compare<T>)
   return -1;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace SortedCollection {
   export type StateRef = Opaque<number, "SortedCollection.StateRef">;
 }
@@ -213,7 +214,8 @@ export class SortedCollection<Item extends { id: number }> {
 
     if (newIndex !== index) {
       const outOfFocus =
-        (index < this.focus.start && newIndex < this.focus.start) || (index >= this.focus.end && newIndex >= this.focus.end);
+        (index < this.focus.start && newIndex < this.focus.start) ||
+        (index >= this.focus.end && newIndex >= this.focus.end);
 
       if (!outOfFocus) {
         this.changeRef += 1;

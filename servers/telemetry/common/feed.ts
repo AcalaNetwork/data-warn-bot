@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 // Source code for the Substrate Telemetry Server.
 // Copyright (C) 2021 Parity Technologies (UK) Ltd.
 //
@@ -14,60 +15,60 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-import { Maybe } from './helpers';
-import { stringify, parse, Stringified } from './stringify';
 import {
-  FeedVersion,
   Address,
+  AuthoritySetInfo,
+  BlockDetails,
+  BlockHash,
+  BlockNumber,
+  ChainLabel,
+  ChainStats,
+  City,
+  FeedVersion,
+  GenesisHash,
   Latitude,
   Longitude,
-  City,
-  NodeId,
+  Milliseconds,
   NodeCount,
   NodeDetails,
-  NodeStats,
-  NodeIO,
   NodeHardware,
+  NodeIO,
+  NodeId,
   NodeLocation,
-  BlockNumber,
-  BlockHash,
-  BlockDetails,
+  NodeStats,
   Timestamp,
-  Milliseconds,
-  ChainLabel,
-  GenesisHash,
-  AuthoritySetInfo,
-  ChainStats,
-} from './types';
+} from "./types";
+import { Maybe } from "./helpers";
+import { Stringified, parse, stringify } from "./stringify";
 
 export const ACTIONS = {
-  FeedVersion: 0x00 as 0x00,
-  BestBlock: 0x01 as 0x01,
-  BestFinalized: 0x02 as 0x02,
-  AddedNode: 0x03 as 0x03,
-  RemovedNode: 0x04 as 0x04,
-  LocatedNode: 0x05 as 0x05,
-  ImportedBlock: 0x06 as 0x06,
-  FinalizedBlock: 0x07 as 0x07,
-  NodeStats: 0x08 as 0x08,
-  NodeHardware: 0x09 as 0x09,
-  TimeSync: 0x0a as 0x0a,
-  AddedChain: 0x0b as 0x0b,
-  RemovedChain: 0x0c as 0x0c,
-  SubscribedTo: 0x0d as 0x0d,
-  UnsubscribedFrom: 0x0e as 0x0e,
-  Pong: 0x0f as 0x0f,
-  AfgFinalized: 0x10 as 0x10,
-  AfgReceivedPrevote: 0x11 as 0x11,
-  AfgReceivedPrecommit: 0x12 as 0x12,
-  AfgAuthoritySet: 0x13 as 0x13,
-  StaleNode: 0x14 as 0x14,
-  NodeIO: 0x15 as 0x15,
-  ChainStatsUpdate: 0x16 as 0x16,
+  FeedVersion: 0x00 as const,
+  BestBlock: 0x01 as const,
+  BestFinalized: 0x02 as const,
+  AddedNode: 0x03 as const,
+  RemovedNode: 0x04 as const,
+  LocatedNode: 0x05 as const,
+  ImportedBlock: 0x06 as const,
+  FinalizedBlock: 0x07 as const,
+  NodeStats: 0x08 as const,
+  NodeHardware: 0x09 as const,
+  TimeSync: 0x0a as const,
+  AddedChain: 0x0b as const,
+  RemovedChain: 0x0c as const,
+  SubscribedTo: 0x0d as const,
+  UnsubscribedFrom: 0x0e as const,
+  Pong: 0x0f as const,
+  AfgFinalized: 0x10 as const,
+  AfgReceivedPrevote: 0x11 as const,
+  AfgReceivedPrecommit: 0x12 as const,
+  AfgAuthoritySet: 0x13 as const,
+  StaleNode: 0x14 as const,
+  NodeIO: 0x15 as const,
+  ChainStatsUpdate: 0x16 as const,
 };
 
 export type Action = typeof ACTIONS[keyof typeof ACTIONS];
-export type Payload = Message['payload'];
+export type Payload = Message["payload"];
 
 export namespace Variants {
   export interface MessageBase {
@@ -228,7 +229,7 @@ export type Message =
  * Data type to be sent to the feed. Passing through strings means we can only serialize once,
  * no matter how many feed clients are listening in.
  */
-export interface SquashedMessages extends Array<Action | Payload> {}
+export type SquashedMessages = Array<Action | Payload>;
 export type Data = Stringified<SquashedMessages>;
 
 /**
@@ -259,7 +260,7 @@ export function deserialize(data: Data): Array<Message> {
   const json = parse(data);
 
   if (!Array.isArray(json) || json.length === 0 || json.length % 2 !== 0) {
-    throw new Error('Invalid FeedMessage.Data');
+    throw new Error("Invalid FeedMessage.Data");
   }
 
   const messages = new Array<Message>(json.length / 2);

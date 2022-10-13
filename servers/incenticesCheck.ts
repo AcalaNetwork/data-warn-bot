@@ -1,7 +1,7 @@
-import { Wallet } from "@acala-network/sdk";
-import { FixedPointNumber, forceToCurrencyName } from "@acala-network/sdk-core";
 import { ApiPromise } from "@polkadot/api";
-import { getAcaApi, INCENTIVES_BALANCE, getKarApi, Logger } from "../utils";
+import { FixedPointNumber, forceToCurrencyName } from "@acala-network/sdk-core";
+import { INCENTIVES_BALANCE, Logger, getAcaApi, getKarApi } from "../utils";
+import { Wallet } from "@acala-network/sdk";
 
 // karura qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a
 // acala  23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit
@@ -37,14 +37,22 @@ export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address:
 
   const _nativeToken = api.consts.currencies.getNativeCurrencyId;
   const nativeToken = wallet.__getToken(_nativeToken);
-  balanceObj[nativeToken.display] = FixedPointNumber.fromInner((nativeBalance.toJSON() as any).data.free, nativeToken.decimals).toNumber();
+  balanceObj[nativeToken.display] = FixedPointNumber.fromInner(
+    (nativeBalance.toJSON() as any).data.free,
+    nativeToken.decimals
+  ).toNumber();
   unnativeBalance.forEach((i) => {
     const token = wallet.__getToken(forceToCurrencyName(i[0].args[1]));
-    balanceObj[token.display] = FixedPointNumber.fromInner((i[1].toJSON() as any).free.toString(), token.decimals).toNumber();
+    balanceObj[token.display] = FixedPointNumber.fromInner(
+      (i[1].toJSON() as any).free.toString(),
+      token.decimals
+    ).toNumber();
   });
 
   const pools = await api.query.incentives.incentiveRewardAmounts.keys();
-  const data = await Promise.all(pools.map(async (poolId) => await api.query.incentives.incentiveRewardAmounts.entries(poolId.args[0])));
+  const data = await Promise.all(
+    pools.map(async (poolId) => await api.query.incentives.incentiveRewardAmounts.entries(poolId.args[0]))
+  );
   const needPayObj: {
     [k: string]: {
       balance?: number;
@@ -52,8 +60,8 @@ export const _incenticesCheck = async (api: ApiPromise, wallet: Wallet, address:
       paidableDays: number | string;
     };
   } = {};
-  data.forEach((rewardAmounts, i) => {
-    const rewardAmountsConfig = rewardAmounts.map((item) => {
+  data.forEach((rewardAmounts) => {
+    rewardAmounts.forEach((item) => {
       const token = wallet.__getToken(item[0].args[1]);
       const payAmount = FixedPointNumber.fromInner(item[1].toString(), token.decimals);
       if (needPayObj[token.display] && needPayObj[token.display].periodPay) {

@@ -1,8 +1,8 @@
-import WebSocket from "ws";
-import { VERSION, timestamp, FeedMessage, Types, Maybe, sleep } from "./common";
 import { ACTIONS } from "./common/feed";
-import { State, Update, Node } from "./state";
+import { FeedMessage, Maybe, Types, VERSION, sleep, timestamp } from "./common";
+import { Node, State, Update } from "./state";
 import { config } from "../../config";
+import WebSocket from "ws";
 
 const CONNECTION_TIMEOUT_BASE = (1000 * 5) as Types.Milliseconds; // 5 seconds
 const CONNECTION_TIMEOUT_MAX = (1000 * 60 * 5) as Types.Milliseconds; // 5 minutes
@@ -35,7 +35,7 @@ export class Connection {
   }
 
   private static async trySocket(): Promise<Maybe<WebSocket>> {
-    return new Promise<Maybe<WebSocket>>((resolve, _) => {
+    return new Promise<Maybe<WebSocket>>((resolve) => {
       function clean() {
         socket.removeEventListener("open", onSuccess);
         socket.removeEventListener("close", onFailure);
@@ -89,7 +89,6 @@ export class Connection {
   private handleMessages = (messages: FeedMessage.Message[]) => {
     this.messageTimeout?.reset();
     const { nodes } = this.appState;
-    const nodesStateRef = nodes.ref;
 
     for (const message of messages) {
       switch (message.action) {
@@ -102,8 +101,19 @@ export class Connection {
         }
 
         case ACTIONS.AddedNode: {
-          const [id, nodeDetails, nodeStats, nodeIO, nodeHardware, blockDetails, location, startupTime] = message.payload;
-          const node = new Node(true, id, nodeDetails, nodeStats, nodeIO, nodeHardware, blockDetails, location, startupTime);
+          const [id, nodeDetails, nodeStats, nodeIO, nodeHardware, blockDetails, location, startupTime] =
+            message.payload;
+          const node = new Node(
+            true,
+            id,
+            nodeDetails,
+            nodeStats,
+            nodeIO,
+            nodeHardware,
+            blockDetails,
+            location,
+            startupTime
+          );
 
           nodes.add(node);
 

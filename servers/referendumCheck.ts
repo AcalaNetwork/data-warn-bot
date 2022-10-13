@@ -1,5 +1,5 @@
-import { getAcaApi, getKarApi, Logger } from "../utils";
 import { DeriveReferendumExt } from "@polkadot/api-derive/types";
+import { Logger, getAcaApi, getKarApi } from "../utils";
 
 let referendumMap: Record<string, boolean> = {};
 

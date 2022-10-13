@@ -1,8 +1,8 @@
 import { FixedPointNumber } from "@acala-network/sdk-core";
-import { u128, u64 } from "@polkadot/types";
-import { encodeAddress } from "@polkadot/util-crypto";
+import { LARGE_XTOKENS_TRANSFER, Logger, generateDexToken } from "../utils";
 import { config } from "../config";
-import { generateDexToken, LARGE_XTOKENS_TRANSFER, Logger } from "../utils";
+import { encodeAddress } from "@polkadot/util-crypto";
+import { u128, u64 } from "@polkadot/types";
 
 interface XTokensArgs {
   currency_id: {
@@ -29,7 +29,7 @@ interface XTokensArgs {
  * send [warn] message if xTokens transfer out KSM > 1000.
  */
 export const largecrossChainTransfers = async (height: number, args: any, index: number) => {
-  const { currency_id, amount, dest, dest_weight } = args as XTokensArgs;
+  const { currency_id, amount, dest } = args as XTokensArgs;
 
   const token = generateDexToken(currency_id);
   const total = FixedPointNumber.fromInner(amount.toString(), config.ksm.decimal).toNumber();

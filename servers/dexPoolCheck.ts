@@ -1,5 +1,5 @@
-import { getAcaApi, getKarApi, Logger } from "../utils";
 import { FixedPointNumber as FN } from "@acala-network/sdk-core";
+import { Logger, getAcaApi, getKarApi } from "../utils";
 
 function getTokenName(raw: string) {
   switch (raw) {

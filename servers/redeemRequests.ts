@@ -1,7 +1,7 @@
-import { request, gql } from "graphql-request";
-import moment from "moment";
+import { Logger, OVER_8_DAYS_REDEEMREQUESTS, getKarApi } from "../utils";
 import { config } from "../config";
-import { getKarApi, Logger, OVER_8_DAYS_REDEEMREQUESTS } from "../utils";
+import { gql, request } from "graphql-request";
+import moment from "moment";
 
 /// check all homa redeem requests waiting duration on Karura,
 /// send [warn] message if any request wait more than 7 days.
@@ -9,9 +9,9 @@ import { getKarApi, Logger, OVER_8_DAYS_REDEEMREQUESTS } from "../utils";
 export const redeemRequests = async () => {
   const _redeems = await getKarApi().query.homaLite.redeemRequests.entries();
   const accounts: string[] = [];
-  let strings: string = "";
+  let strings = "";
   _redeems.forEach((redeem) => {
-    const [account, args] = redeem;
+    const account = redeem[0];
     const _account = (account.toHuman() as string[])[0];
     accounts.push(_account);
   });

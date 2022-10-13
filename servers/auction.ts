@@ -1,4 +1,4 @@
-import { getAcaApi, AUCTIONS, getKarApi, Logger } from "../utils";
+import { AUCTIONS, Logger, getAcaApi, getKarApi } from "../utils";
 
 export interface IAuction {
   id: string;

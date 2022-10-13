@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export * from './helpers';
-export * from './id';
-export * from './stringify';
-export * from './SortedCollection';
+export * from "./helpers";
+export * from "./id";
+export * from "./stringify";
+export * from "./SortedCollection";
 
-import * as Types from './types';
-import * as FeedMessage from './feed';
+import * as FeedMessage from "./feed";
+import * as Types from "./types";
 
 export { Types, FeedMessage };
 

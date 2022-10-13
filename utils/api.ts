@@ -1,9 +1,8 @@
+/* eslint-disable no-prototype-builtins */
+import { API_ERROR, Logger } from ".";
 import { ApiPromise } from "@polkadot/api/promise";
 import { WsProvider } from "@polkadot/rpc-provider";
-import { types, typesBundle } from "@acala-network/type-definitions";
 import { config } from "../config";
-import { API_ERROR, Logger } from ".";
-import Scanner from "@open-web3/scanner";
 import { options } from "@acala-network/api";
 
 export type TChain = "karura" | "kusama";
@@ -39,14 +38,12 @@ export class karuraApi {
   static instance: karuraApi | null;
   public api: ApiPromise;
   public provider: WsProvider;
-  public scanner: Scanner;
   constructor() {
     if (karuraApi.instance == null) {
       this.provider = new WsProvider(config.endPoints.karura);
       this.api = new ApiPromise(options({ provider: this.provider }));
-      this.scanner = new Scanner({ wsProvider: this.provider, types, typesBundle });
       this.api.isReadyOrError
-        .then((_api) => {
+        .then(() => {
           Logger.log("karuraApi is Ready!");
         })
         .catch((err) => {
@@ -65,7 +62,7 @@ export class kusamaApi {
     const provider = new WsProvider(config.endPoints.kusama);
     this.api = new ApiPromise(options({ provider }));
     this.api.isReadyOrError
-      .then((_api) => {
+      .then(() => {
         Logger.log("kusamaApi is Ready!");
       })
       .catch((err) => {
@@ -85,7 +82,7 @@ export class acalaApi {
     const provider = new WsProvider(config.endPoints.acala);
     this.api = new ApiPromise(options({ provider }));
     this.api.isReadyOrError
-      .then((_api) => {
+      .then(() => {
         Logger.log("acalaApi is Ready!");
       })
       .catch((err) => {
@@ -105,7 +102,7 @@ export class polkaApi {
     const provider = new WsProvider(config.endPoints.polkadot);
     this.api = new ApiPromise(options({ provider }));
     this.api.isReadyOrError
-      .then((_api) => {
+      .then(() => {
         Logger.log("polkaApi is Ready!");
       })
       .catch((err) => {
@@ -121,19 +118,17 @@ export class polkaApi {
 const apis: Record<string, ApiPromise> = {};
 export const connectNodes = async () => {
   apis["aca"] = new acalaApi().api;
+  apis["kar"] = new karuraApi().api;
   apis["dot"] = new polkaApi().api;
   apis["ksm"] = new kusamaApi().api;
 
   await apis["aca"].isReady;
+  await apis["kar"].isReady;
   await apis["dot"].isReady;
   await apis["ksm"].isReady;
-
-  await getKarApi().isReady;
 };
-const _KarApi = new karuraApi();
-export const getKarApi = () => _KarApi.api;
-export const getKarScanner = () => _KarApi.scanner;
 
 export const getAcaApi = () => apis["aca"];
+export const getKarApi = () => apis["kar"];
 export const getPolkaApi = () => apis["dot"];
 export const getKsmApi = () => apis["ksm"];

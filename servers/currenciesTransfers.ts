@@ -1,9 +1,9 @@
-import { Wallet } from "@acala-network/sdk";
-import { FixedPointNumber } from "@acala-network/sdk-core";
 import { AccountId32 } from "@acala-network/types/interfaces";
 import { Event } from "@open-web3/scanner/types";
+import { FixedPointNumber } from "@acala-network/sdk-core";
+import { LARGE_CURRENCIES_TRANSFER, Logger, generateDexToken } from "../utils";
+import { Wallet } from "@acala-network/sdk";
 import { u128 } from "@polkadot/types";
-import { generateDexToken, LARGE_CURRENCIES_TRANSFER, Logger } from "../utils";
 
 /**
  * send [warn] message if currency transfer amount > $300000.

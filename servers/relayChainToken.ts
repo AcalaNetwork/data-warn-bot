@@ -1,6 +1,6 @@
+import { FixedPointNumber } from "@acala-network/sdk-core";
 import { config } from "../config";
 import { getAcaApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
-import { FixedPointNumber } from "@acala-network/sdk-core";
 
 /// check DOT/KSM balance between parachain-account and total-issuance,
 /// send [diff-ratio] message.
@@ -14,7 +14,9 @@ export const relayChainTokenCheck = async (token: "KSM" | "DOT" = "KSM") => {
     const ksmAccount = await getKsmApi().query.system.account(config.ksm.account);
     const ksmBalance = FixedPointNumber.fromInner((ksmAccount as any).data.free.toString(), config.ksm.decimal);
 
-    const _karBalance = await getKarApi().query.tokens.totalIssuance({ Token: "KSM" });
+    const _karBalance = await getKarApi().query.tokens.totalIssuance({
+      Token: "KSM",
+    });
     const karBalance = FixedPointNumber.fromInner(_karBalance.toString(), config.ksm.decimal);
 
     diff = karBalance.sub(ksmBalance);
@@ -27,7 +29,9 @@ export const relayChainTokenCheck = async (token: "KSM" | "DOT" = "KSM") => {
     const polkaAccount = await getPolkaApi().query.system.account(config.ksm.account);
     const polkaBalance = FixedPointNumber.fromInner((polkaAccount as any).data.free.toString(), 10);
 
-    const _acaBalance = await getAcaApi().query.tokens.totalIssuance({ Token: "DOT" });
+    const _acaBalance = await getAcaApi().query.tokens.totalIssuance({
+      Token: "DOT",
+    });
     const acaBalance = FixedPointNumber.fromInner(_acaBalance.toString(), 10);
 
     diff = acaBalance.sub(polkaBalance);

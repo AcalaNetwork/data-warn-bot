@@ -1,4 +1,4 @@
-import { getAcaApi, getPolkaApi, Logger, ACALA_HOMA } from "../utils";
+import { ACALA_HOMA, Logger, getAcaApi, getPolkaApi } from "../utils";
 
 const ledger0 = "15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn";
 

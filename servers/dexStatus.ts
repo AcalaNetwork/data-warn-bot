@@ -1,8 +1,8 @@
-import { Wallet } from "@acala-network/sdk";
+import { DEX_PRICE_WARNING, Logger, getKarApi } from "../utils";
 import { FixedPointNumber as FN, forceToCurrencyName } from "@acala-network/sdk-core";
-import axios from "axios";
+import { Wallet } from "@acala-network/sdk";
 import { config } from "../config";
-import { DEX_PRICE_WARNING, getKarApi, Logger } from "../utils";
+import axios from "axios";
 
 interface ItradingPairs {
   [k: string]: {
@@ -38,14 +38,19 @@ export const dexStatus = async (KarWallet: Wallet) => {
   const prices: any = {};
   pools.forEach((pool) => {
     const [pair, status] = pool;
-    const [token1, token2] = [forceToCurrencyName((pair.args[0] as any)[0]), forceToCurrencyName((pair.args[0] as any)[1])];
+    const [token1, token2] = [
+      forceToCurrencyName((pair.args[0] as any)[0]),
+      forceToCurrencyName((pair.args[0] as any)[1]),
+    ];
     if (status.toString() === "Enabled") {
       enabledPoolQuerys.push([token1, token2]);
       tokens.push(...[token1, token2]);
     }
   });
   const liquidityPools = await Promise.all(
-    enabledPoolQuerys.map((pair) => getKarApi().query.dex.liquidityPool([formatQueryParmas(pair[0]), formatQueryParmas(pair[1])]))
+    enabledPoolQuerys.map((pair) =>
+      getKarApi().query.dex.liquidityPool([formatQueryParmas(pair[0]), formatQueryParmas(pair[1])])
+    )
   );
   const liquidityPrices = await Promise.all(
     Array.from(new Set(tokens)).map(async (token) => {
@@ -86,6 +91,11 @@ export const dexStatus = async (KarWallet: Wallet) => {
   });
 
   if (strings != "") {
-    Logger.pushEvent(DEX_PRICE_WARNING, `%%% \n - list: \n ${strings} \n %%% @slack-Acala-data-warn-bot`, "normal", "info");
+    Logger.pushEvent(
+      DEX_PRICE_WARNING,
+      `%%% \n - list: \n ${strings} \n %%% @slack-Acala-data-warn-bot`,
+      "normal",
+      "info"
+    );
   }
 };

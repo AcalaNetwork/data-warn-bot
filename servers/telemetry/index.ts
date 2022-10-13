@@ -1,9 +1,9 @@
 import { Connection } from "./Connection";
-import { SortedCollection } from "./common";
 import { GenesisHash } from "./common/types";
 import { Node } from "./state";
-import { watchDogLog } from "../../utils";
+import { SortedCollection } from "./common";
 import { config } from "../../config";
+import { watchDogLog } from "../../utils";
 
 const acalaState = {
   ACALA: {
@@ -25,7 +25,9 @@ export const startTelemetry = (network: AcalaNetwork = "KARURA") => {
 };
 
 export const pushTelemetryLog = (network: AcalaNetwork = "KARURA") => {
-  const ownNodes = acalaState[network].nodes.list.filter((e) => config.nodeIDs[network].includes(e.networkId as string));
+  const ownNodes = acalaState[network].nodes.list.filter((e) =>
+    config.nodeIDs[network].includes(e.networkId as string)
+  );
 
   const heightSorted = ownNodes.sort((a, b) => (a.height > b.height ? -1 : 1));
   const notSyncNodes = heightSorted.filter((e) => e.height + 10 < heightSorted[0].height);
