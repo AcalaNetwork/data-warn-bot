@@ -1,0 +1,7 @@
+{
+  "env": {
+    "DD_SITE": "datadoghq.com",
+    "DD_API_KEY": "xxx",
+    "DD_APP_KEY": "xxx"
+  }
+}

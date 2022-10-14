@@ -1,10 +1,11 @@
 import { BN, BN_ZERO } from "@polkadot/util";
+import { ChainName } from "../types";
 import { getAcaApi, getKarApi, watchDogLog } from "../utils";
 
-export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
+export const aUSDBalanceCheck = async (env: ChainName = "Karura") => {
   const divider = new BN(1_000_000_000_000);
-  const token = env === "KARURA" ? "KUSD" : "AUSD";
-  const api = env === "KARURA" ? getKarApi() : getAcaApi();
+  const token = env === "Karura" ? "KUSD" : "AUSD";
+  const api = env === "Karura" ? getKarApi() : getAcaApi();
   const issuance: any = ((await api.query.tokens.totalIssuance({ Token: token })) as any).div(divider);
   const totalPos: any[] = await api.query.loans.totalPositions.entries();
   const exchangeRates: any[] = await Promise.all(
@@ -21,7 +22,7 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
     .div(divider);
   const badDebt = ((await api.query.cdpTreasury.debitPool()) as any).div(divider);
   const balanceDiff = issuance.sub(totalMint).sub(badDebt).toNumber();
-  const constDiff = env === "KARURA" ? 550_000 : 1_100_000;
+  const constDiff = env === "Karura" ? 550_000 : 1_100_000;
   const diff = balanceDiff - constDiff;
   const diffRatio = diff / constDiff;
 
@@ -31,7 +32,7 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
   - BadDebt: ${badDebt}
   - Specified: ${constDiff}
   - Diff: ${diff}`;
-  console.log(issuanceMsg, diffRatio);
+
   watchDogLog(
     {
       level: "info",
@@ -40,7 +41,7 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
       value: parseFloat(diffRatio.toFixed(6)),
       timestamp: new Date().toUTCString(),
     },
-    `env:${env},env:mainnet`
+    `env:${env.toLowerCase()},env:mainnet`
   );
 
   const issuanceWithoutSpecified = issuance.toNumber() - constDiff;
@@ -48,7 +49,7 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
   const badDebtMsg = `${token} bad debt check:
 - Issuance without Specified: ${issuanceWithoutSpecified}
 - BadDebt: ${badDebt}`;
-  console.log(badDebtMsg, badDebtRatio);
+
   watchDogLog(
     {
       level: "info",
@@ -57,6 +58,6 @@ export const aUSDBalanceCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
       value: parseFloat(badDebtRatio.toFixed(6)),
       timestamp: new Date().toUTCString(),
     },
-    `env:${env},env:mainnet`
+    `env:${env.toLowerCase()},env:mainnet`
   );
 };

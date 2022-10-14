@@ -8,7 +8,7 @@ import { incenticesCheck } from "./monitors/incenticesCheck";
 import { loanLevel } from "./monitors/loanLevel";
 import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
 import { referendumCheck } from "./monitors/referendumCheck";
-import { relayChainTokenCheck } from "./monitors";
+import { relayChainTokenCheck } from "./monitors/relayChainToken";
 import Koa from "koa";
 // import { dexPoolCheck } from "./servers/dexPoolCheck";
 
@@ -30,10 +30,10 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
     const hour = new Date().getHours();
     // every 1 hour
     auctionsCheck();
-    auctionsCheck("ACALA");
+    auctionsCheck("Acala");
 
     referendumCheck();
-    referendumCheck("ACALA");
+    referendumCheck("Acala");
 
     if (hour === 4 || hour === 12 || hour === 20) {
       // 4:00 12:00 20:00
@@ -59,7 +59,7 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
 
 const setupLogAgent = () => {
   startTelemetry();
-  startTelemetry("ACALA");
+  startTelemetry("Acala");
 
   logAgentTick(true);
   // send log to datadog every 10 mins
@@ -69,16 +69,16 @@ const setupLogAgent = () => {
 const logAgentTick = (isFirstTick = false) => {
   // relaychain balance check & send log
   relayChainTokenCheck();
-  relayChainTokenCheck("DOT");
+  relayChainTokenCheck("Acala");
 
   // aUSD balance check & send log
   aUSDBalanceCheck();
-  aUSDBalanceCheck("ACALA");
+  aUSDBalanceCheck("Acala");
 
   if (!isFirstTick) {
     // telemetry check & send log
     pushTelemetryLog();
-    pushTelemetryLog("ACALA");
+    pushTelemetryLog("Acala");
   }
 
   // TODO: this dex pool check is temp

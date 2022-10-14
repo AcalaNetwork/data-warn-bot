@@ -1,15 +1,16 @@
+import { ChainName } from "../types";
 import { FixedPointNumber } from "@acala-network/sdk-core";
 import { config } from "../config";
 import { getAcaApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
 
 /// check DOT/KSM balance between parachain-account and total-issuance,
 /// send [diff-ratio] message.
-export const relayChainTokenCheck = async (token: "KSM" | "DOT" = "KSM") => {
+export const relayChainTokenCheck = async (env: ChainName = "Karura") => {
   let diff = FixedPointNumber.ZERO;
   let diffRatio = 0;
   let msg = "";
+  const token = env === "Karura" ? "KSM" : "DOT";
   const relayChain = token === "KSM" ? "kusama" : "polkadot";
-  const env = token === "KSM" ? "karura" : "acala";
   if (token === "KSM") {
     const ksmAccount = await getKsmApi().query.system.account(config.ksm.account);
     const ksmBalance = FixedPointNumber.fromInner((ksmAccount as any).data.free.toString(), config.ksm.decimal);
@@ -50,6 +51,6 @@ export const relayChainTokenCheck = async (token: "KSM" | "DOT" = "KSM") => {
       value: diffRatio,
       timestamp: new Date().toUTCString(),
     },
-    `env:${env},env:mainnet`
+    `env:${env.toLowerCase()},env:mainnet`
   );
 };

@@ -1,3 +1,4 @@
+import { ChainName } from "../types";
 import { DeriveReferendumExt } from "@polkadot/api-derive/types";
 import { Logger, getAcaApi, getKarApi } from "../utils";
 
@@ -8,8 +9,8 @@ let referendumMap: Record<string, boolean> = {};
 // push event to datadog if checkCount == 0.
 let checkCount = 0;
 
-export const referendumCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
-  const api = env === "KARURA" ? getKarApi() : getAcaApi();
+export const referendumCheck = async (env: ChainName = "Karura") => {
+  const api = env === "Karura" ? getKarApi() : getAcaApi();
   const referendums: DeriveReferendumExt[] = await api.derive.democracy.referendums();
 
   if (referendums.length === 0) return;

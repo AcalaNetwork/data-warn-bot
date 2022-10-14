@@ -1,4 +1,5 @@
 import { AUCTIONS, Logger, getAcaApi, getKarApi } from "../utils";
+import { ChainName } from "../types";
 
 export interface IAuction {
   id: string;
@@ -11,10 +12,10 @@ export interface IAuction {
 }
 
 /// push [info] message if auction list is not empty
-export const auctionsCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
+export const auctionsCheck = async (env: ChainName = "Karura") => {
   let strings = "";
 
-  const api = env === "KARURA" ? getKarApi() : getAcaApi();
+  const api = env === "Karura" ? getKarApi() : getAcaApi();
   const data = await api.query.auction.auctions.entries();
   data.forEach((item) => {
     const [auctionId, auctionInfo] = item;

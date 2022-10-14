@@ -1,3 +1,3 @@
 ## Get Start
 
-create file `/utils/config.ts` with interface IConfig
+create file `nodemon.json` with env for develop.

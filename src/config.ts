@@ -16,7 +16,7 @@ export const config = {
   },
   telemetryUrl: "wss://feed.telemetry.polkadot.io/feed",
   nodeIDs: {
-    ACALA: [
+    Acala: [
       // bootnode
       "12D3KooWALr3yVfDZKn3zg9LuL7mGXg94oT4fxEJfAgierZZTCNn",
       "12D3KooWApQeoWSJN8KmMuE89pyYbDd8b19vpPw8rceoWTVBom6F",
@@ -36,7 +36,7 @@ export const config = {
       "12D3KooWPqh1yszHoP4PSdLomwk8USVVxpet2dubsuMPasAm6EZL",
       "12D3KooWQx4ovK8Y4RyoSaNUvjCWjeiNfzTadGUhJhR1faKRzhxq",
     ],
-    KARURA: [
+    Karura: [
       // bootnode
       "12D3KooW9zA76CH3jAhaiWLykjLoLcisfFpQxLCUuKVWYRS9on7b",
       "12D3KooWMosCgKRA18CVozYg3QhWvEEV85iqAaN7FcENavgUs4vm",
