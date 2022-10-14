@@ -1,10 +1,9 @@
 import { Wallet } from "@acala-network/sdk/wallet";
 import { aUSDBalanceCheck } from "./monitors/aUSDBalance";
-import { acalaHomaCheck } from "./monitors/acalaHoma";
 import { auctionsCheck } from "./monitors/auction";
 import { config } from "./config";
 import { connectNodes, getAcaApi, getKarApi } from "./utils";
-import { homaCheck } from "./monitors/homa";
+import { homaCheck } from "./monitors/homaCheck";
 import { incenticesCheck } from "./monitors/incenticesCheck";
 import { loanLevel } from "./monitors/loanLevel";
 import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
@@ -53,7 +52,7 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
       // 2:00 10:00 18:00
       // homa check & send event
       homaCheck();
-      acalaHomaCheck();
+      homaCheck("Acala");
     }
   }, 1000 * 60 * 60);
 };

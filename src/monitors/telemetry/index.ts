@@ -38,7 +38,7 @@ export const pushTelemetryLog = (network: AcalaNetwork = "KARURA") => {
   if (notSyncNodes.length > 0) {
     logMsg += `- Unsynced: [${notSyncNodes.map((e) => e.name).join(",")}]`;
   }
-  console.log(logMsg);
+
   watchDogLog(
     {
       level: "info",
