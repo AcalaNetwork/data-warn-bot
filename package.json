@@ -7,7 +7,7 @@
     "lint": "tsc --noEmit --project tsconfig.json && eslint . --ext .js,.ts && prettier --check .",
     "fix": "eslint . --ext .js,.ts --fix && prettier -w .",
     "start": "nodemon ./dist/index.js",
-    "serve": "ts-node ./index.ts",
+    "serve": "ts-node ./src/index.ts",
     "start:pro": "yarn run serve",
     "build": "rm -rf ./dist && tsc --downlevelIteration"
   },
