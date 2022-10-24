@@ -5,7 +5,6 @@ import { config } from "./config";
 import { connectNodes, getAcaApi, getKarApi } from "./utils";
 import { homaCheck } from "./monitors/homaCheck";
 import { incenticesCheck } from "./monitors/incenticesCheck";
-import { loanLevel } from "./monitors/loanLevel";
 import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
 import { referendumCheck } from "./monitors/referendumCheck";
 import { relayChainTokenCheck } from "./monitors/relayChainToken";
@@ -35,12 +34,12 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
     referendumCheck();
     referendumCheck("Acala");
 
-    if (hour === 4 || hour === 12 || hour === 20) {
-      // 4:00 12:00 20:00
-      loanLevel(KarWallet);
-      // 4:00 12:00 20:00
-      // redeemRequests();
-    }
+    // if (hour === 4 || hour === 12 || hour === 20) {
+    //   // 4:00 12:00 20:00
+    //   loanLevel(KarWallet);
+    //   // 4:00 12:00 20:00
+    //   // redeemRequests();
+    // }
     if (hour === 10) {
       // info in 10 mins
       // relayChainTokenCheck(true);

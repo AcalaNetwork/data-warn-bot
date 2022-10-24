@@ -6,14 +6,6 @@ import { config } from "../config";
 
 type Token = "KSM" | "LKSM";
 
-interface CollateralParams {
-  maximumTotalDebitValue: any;
-  interestRatePerSec: any;
-  liquidationRatio: any;
-  liquidationPenalty: any;
-  requiredCollateralRatio: any;
-}
-
 interface Position {
   ownerId: string;
   collateralId: Token;
@@ -43,21 +35,27 @@ export const requestAllLoans = async (): Promise<Position[]> => {
 
 const requestParams = async () => {
   const [_debitExchangeRateKSM, _debitExchangeRateLKSM, _collateralParamsKSM, _collateralParamsLKSM] =
-    (await getKarApi().queryMulti([
+    await getKarApi().queryMulti([
       [getKarApi().query.cdpEngine.debitExchangeRate, { Token: "KSM" }],
       [getKarApi().query.cdpEngine.debitExchangeRate, { Token: "LKSM" }],
       [getKarApi().query.cdpEngine.collateralParams, { Token: "KSM" }],
       [getKarApi().query.cdpEngine.collateralParams, { Token: "LKSM" }],
-    ])) as [any, any, CollateralParams, CollateralParams];
+    ]);
 
   return {
     KSM: {
       debitExchangeRate: FixedPointNumber.fromInner(_debitExchangeRateKSM.toString(), 18),
-      requiredCollateralRatio: FixedPointNumber.fromInner(_collateralParamsKSM.requiredCollateralRatio.toString(), 18),
+      requiredCollateralRatio: FixedPointNumber.fromInner(
+        (_collateralParamsKSM as any).toJSON().requiredCollateralRatio.toString(),
+        18
+      ),
     },
     LKSM: {
       debitExchangeRate: FixedPointNumber.fromInner(_debitExchangeRateLKSM.toString(), 18),
-      requiredCollateralRatio: FixedPointNumber.fromInner(_collateralParamsLKSM.requiredCollateralRatio.toString(), 18),
+      requiredCollateralRatio: FixedPointNumber.fromInner(
+        (_collateralParamsLKSM as any).toJSON().requiredCollateralRatio.toString(),
+        18
+      ),
     },
   };
 };
