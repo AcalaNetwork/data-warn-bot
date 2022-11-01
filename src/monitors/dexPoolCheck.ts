@@ -1,3 +1,4 @@
+import { ChainName } from "../types";
 import { FixedPointNumber as FN } from "@acala-network/sdk-core";
 import { Logger, getAcaApi, getKarApi } from "../utils";
 
@@ -54,8 +55,8 @@ function getTokenDecimals(token: string) {
   return 12;
 }
 
-export const dexPoolCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
-  const api = env === "KARURA" ? getKarApi() : getAcaApi();
+export const dexPoolCheck = async (env: ChainName = "Karura") => {
+  const api = env === "Karura" ? getKarApi() : getAcaApi();
   const dexPoolInfo = await api.query.dex.liquidityPool.entries();
   let strings = "";
   dexPoolInfo.forEach(([k, v]) => {
@@ -74,7 +75,7 @@ export const dexPoolCheck = async (env: "KARURA" | "ACALA" = "KARURA") => {
 
   Logger.pushEvent(
     "[DEX_EXCHANGE_RATE] Dex Exchange Rate Check",
-    `%%% \n ${strings} \n %%% @slack-watchdog <@UPKDQJL3U> <@UPKBVBC74>`,
+    `%%% \n ${strings} \n %%% @slack-watchdog`,
     "normal",
     "warning"
   );

@@ -14,6 +14,30 @@ export const config = {
   kar: {
     prefix: 8,
   },
+  allNodes: {
+    acala: [
+      // third part
+      "wss://acala-rpc.dwellir.com",
+      // laminar
+      "wss://acala-rpc-0.aca-api.network",
+      "wss://acala-rpc-1.aca-api.network",
+      "wss://acala-rpc-2.aca-api.network/ws",
+      "wss://acala-rpc-3.aca-api.network/ws",
+      // pw
+      "wss://acala.polkawallet.io",
+    ],
+    karura: [
+      // third part
+      "wss://karura-rpc.dwellir.com",
+      // laminar
+      "wss://karura-rpc-0.aca-api.network",
+      "wss://karura-rpc-1.aca-api.network",
+      "wss://karura-rpc-2.aca-api.network/ws",
+      "wss://karura-rpc-3.aca-api.network/ws",
+      // pw
+      "wss://karura.polkawallet.io",
+    ],
+  },
   telemetryUrl: "wss://feed.telemetry.polkadot.io/feed",
   nodeIDs: {
     Acala: [

@@ -1,6 +1,7 @@
 import { Wallet } from "@acala-network/sdk/wallet";
 import { aUSDBalanceCheck } from "./monitors/aUSDBalance";
 import { auctionsCheck } from "./monitors/auction";
+import { blockHeightCheck } from "./monitors/blockHeightCheck";
 import { config } from "./config";
 import { connectNodes, getAcaApi, getKarApi } from "./utils";
 import { homaCheck } from "./monitors/homaCheck";
@@ -73,6 +74,12 @@ const logAgentTick = (isFirstTick = false) => {
   // aUSD balance check & send log
   aUSDBalanceCheck();
   aUSDBalanceCheck("Acala");
+
+  // block height check & send log/alert
+  blockHeightCheck();
+  blockHeightCheck("Acala");
+  blockHeightCheck("Karura", true);
+  blockHeightCheck("Acala", true);
 
   if (!isFirstTick) {
     // telemetry check & send log
