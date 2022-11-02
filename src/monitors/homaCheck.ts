@@ -5,8 +5,8 @@ const relayLedgerAddresses: Record<ChainName, string[]> = {
   Acala: ["15sr8Dvq3AT3Z2Z1y8FnQ4VipekAHhmQnrkgzegUr1tNgbcn"],
   Karura: [
     "HTAeD1dokCVs9MwnC1q9s2a7d2kQ52TAjrxE1y5mj5MFLLA",
-    "FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL",
     "EMrKvFy7xLgzzdgruXT9oXERt553igEScqgSjoDm3GewPSA",
+    "FDVu3RdH5WsE2yTdXN3QMq6v1XVDK8GKjhq5oFjXe8wZYpL",
   ],
 };
 
