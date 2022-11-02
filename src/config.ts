@@ -17,7 +17,7 @@ export const config = {
   allNodes: {
     acala: [
       // third part
-      "wss://acala-rpc.dwellir.com",
+      // "wss://acala-rpc.dwellir.com",
       // laminar
       "wss://acala-rpc-0.aca-api.network",
       "wss://acala-rpc-1.aca-api.network",
@@ -28,7 +28,7 @@ export const config = {
     ],
     karura: [
       // third part
-      "wss://karura-rpc.dwellir.com",
+      // "wss://karura-rpc.dwellir.com",
       // laminar
       "wss://karura-rpc-0.aca-api.network",
       "wss://karura-rpc-1.aca-api.network",

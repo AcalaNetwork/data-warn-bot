@@ -66,12 +66,12 @@ export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = fa
   }
 
   const update = cache[env].map((height, i) => latestHeight[i] - height);
-  const halted = update.filter((e) => e < 1);
+  const halted = update.filter((e, i) => e < 1 && latestHeight[i] > 0);
 
   const checkName = fromSubql ? "services" : "nodes";
   let shouldReport = false;
   let logMsg = `${env} ${checkName} check:
-- Active/All ${checkName}: ${latestHeight.length - halted.length}/${latestHeight.length}`;
+- Active/All ${checkName}: ${latestHeight.length - halted.length}/${latestHeight.length}\n`;
   if (halted.length > 0) {
     logMsg += `- Halted: [${update
       .map((e, i) => (e < 1 ? `${urls[i]}(${latestHeight[i]})` : ""))
