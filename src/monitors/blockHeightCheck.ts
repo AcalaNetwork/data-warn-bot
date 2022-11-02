@@ -14,6 +14,16 @@ const subqlBlockHeightCache: Record<ChainName, number[]> = {
   Karura: [],
 };
 
+const nodeReportedCache: Record<ChainName, number> = {
+  Acala: 0,
+  Karura: 0,
+};
+
+const subqlReportedCache: Record<ChainName, number> = {
+  Acala: 0,
+  Karura: 0,
+};
+
 async function _getHeightWithWs(url: string): Promise<number> {
   return new Promise((resolve) => {
     try {
@@ -57,6 +67,7 @@ export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = fa
   const urls = fromSubql ? allSubql : allNodes;
   const latestHeight = await Promise.all(urls.map((e) => (fromSubql ? _getHeightWithSubql(e) : _getHeightWithWs(e))));
   const cache = fromSubql ? subqlBlockHeightCache : blockHeightCache;
+  const reportedCache = fromSubql ? subqlReportedCache : nodeReportedCache;
 
   if (cache[env].length == 0) {
     cache[env] = [...latestHeight];
@@ -92,7 +103,23 @@ export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = fa
 
   cache[env] = [...latestHeight];
 
-  if (!shouldReport) return;
+  if (!shouldReport) {
+    if (reportedCache[env] > 0) {
+      // recovered from reported
+      Logger.pushEvent(
+        fromSubql ? `[${env} Subql Check] Subql Service Recovered` : `[${env} Block Check] Block Height Halt Recovered`,
+        `%%% \n ${logMsg} \n %%% @slack-watchdog`,
+        "normal",
+        "success"
+      );
+
+      reportedCache[env] = 0;
+    }
+    return;
+  }
+
+  // ignore repeated report
+  if (reportedCache[env] === halted.length) return;
 
   const notify = fromSubql ? `<@U01A7DFD0CR> <@UPY6J8X5E>` : logMsg.match("polkawallet.io") ? "<@U01A7DFD0CR>" : "";
 
@@ -100,6 +127,8 @@ export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = fa
     fromSubql ? `[${env} Subql Check] Subql Service Alert` : `[${env} Block Check] Block Height Halt Alert`,
     `%%% \n ${logMsg} \n %%% @slack-watchdog ${notify}`,
     "normal",
-    "warning"
+    "error"
   );
+
+  reportedCache[env] = halted.length;
 };
