@@ -41,7 +41,7 @@ async function _getHeightWithWs(url: string): Promise<number> {
 
 async function _getHeightWithSubql(url: string) {
   const res = await axios.post(
-    url,
+    `https://api.polkawallet.io/${url}`,
     { query: "{\n  query {\n _metadata {\n targetHeight\n }\n}\n}" },
     { headers: { "Content-Type": "application/json" } }
   );
@@ -53,9 +53,7 @@ async function _getHeightWithSubql(url: string) {
 
 export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = false) => {
   const allNodes = env == "Acala" ? config.allNodes.acala : config.allNodes.karura;
-  const allSubql = ["history", "loan", "dex", "stats"].map(
-    (e) => `https://api.polkawallet.io/${env.toLowerCase()}-${e}-subql`
-  );
+  const allSubql = ["history", "loan", "dex", "stats"].map((e) => `${env.toLowerCase()}-${e}-subql`);
   const urls = fromSubql ? allSubql : allNodes;
   const latestHeight = await Promise.all(urls.map((e) => (fromSubql ? _getHeightWithSubql(e) : _getHeightWithWs(e))));
   const cache = fromSubql ? subqlBlockHeightCache : blockHeightCache;
