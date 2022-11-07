@@ -25,20 +25,21 @@ export const homaCheck = async (env: ChainName = "Karura") => {
   const relayChainName = env === "Karura" ? "Kusama" : "Polkadot";
 
   let strings = "";
-  const [era, relayEra, minBond, ledgers, relayLergers] = await Promise.all([
+  const [era, relayEraData, minBond, ledgers, relayLergers] = await Promise.all([
     api.query.homa.relayChainCurrentEra(),
-    relayApi.query.staking.currentEra(),
+    relayApi.query.staking.activeEra(),
     relayApi.query.staking.minNominatorBond(),
     api.query.homa.stakingLedgers.entries(),
     Promise.all(relayLedgerAddresses[env].map((e) => relayApi.query.staking.ledger(e))),
   ]);
-  const eraCheckOk = Number(era.toString()) + 1 >= Number(relayEra.toString());
-  let ksmUnlockingLenCheckOk = false;
-  let percentCheckOk = false;
+  const relayEra = Number((relayEraData as any).unwrapOrDefault().index.toString());
+  const eraCheckOk = Number(era.toString()) + 1 >= relayEra;
+  let ksmUnlockingLenCheckOk = true;
+  let percentCheckOk = true;
 
   strings += "## Era Check \n";
   strings += `- ${env}: ${era.toString()} \n`;
-  strings += `- ${relayChainName}: ${relayEra.toString()} \n \n`;
+  strings += `- ${relayChainName}: ${relayEra} \n \n`;
 
   ledgers.forEach((ledger, i) => {
     const [no, data] = ledger;
