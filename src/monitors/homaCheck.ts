@@ -55,11 +55,13 @@ export const homaCheck = async (env: ChainName = "Karura") => {
 
     ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && unlockingLen + 1 >= ksmUnlockingLen;
 
-    percentCheckOk = percentCheckOk && bonded <= ksmBonded && (ksmBonded - bonded) / bonded <= 0.003;
+    percentCheckOk = percentCheckOk && Math.abs(ksmBonded - bonded) / bonded <= 0.003;
 
     strings += `- ${env} homa ledger #${ledgerNo}: bonded: ${bonded} \n`;
-    strings += `- Subaccount on ${relayChainName} #${ledgerNo}: bonded: ${ksmBonded} \n`;
+    strings += `- Subaccount on ${relayChainName} #${ledgerNo} bonded: ${ksmBonded} \n`;
   });
+
+  strings += `- Era check ${eraCheckOk}, Unlocking length check ${ksmUnlockingLenCheckOk}, Balance diff check ${percentCheckOk}.\n`;
 
   const title = `[${env} Minnet] Check Homa Status With ${relayChainName} Subaccount`;
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {

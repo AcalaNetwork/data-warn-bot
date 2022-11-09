@@ -1,9 +1,8 @@
-import { Wallet } from "@acala-network/sdk/wallet";
 import { aUSDBalanceCheck } from "./monitors/aUSDBalance";
 import { auctionsCheck } from "./monitors/auction";
 import { blockHeightCheck } from "./monitors/blockHeightCheck";
 import { config } from "./config";
-import { connectNodes, getAcaApi, getKarApi } from "./utils";
+import { connectNodes, getApiConnected, reConnectAll } from "./utils";
 import { homaCheck } from "./monitors/homaCheck";
 import { incenticesCheck } from "./monitors/incenticesCheck";
 import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
@@ -18,17 +17,17 @@ app.listen(config.port, async () => {
   console.log("Server [data-warn-bot] start at: ", config.port);
   await connectNodes();
 
-  const KarWallet = new Wallet(getKarApi());
-  const AcaWallet = new Wallet(getAcaApi());
-
-  runloop(KarWallet, AcaWallet);
+  runloop();
   setupLogAgent();
 });
 
-const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
-  setInterval(() => {
+const runloop = () => {
+  setInterval(async () => {
     const hour = new Date().getHours();
     // every 1 hour
+
+    await reConnectAll();
+
     auctionsCheck();
     auctionsCheck("Acala");
 
@@ -45,7 +44,7 @@ const runloop = async (KarWallet: Wallet, AcaWallet: Wallet) => {
       // info in 10 mins
       // relayChainTokenCheck(true);
       // check incentives
-      incenticesCheck(KarWallet, AcaWallet);
+      incenticesCheck();
     }
 
     if (hour === 2 || hour === 10 || hour === 18) {
@@ -67,6 +66,8 @@ const setupLogAgent = () => {
 };
 
 const logAgentTick = (isFirstTick = false) => {
+  if (!getApiConnected()) return;
+
   // relaychain balance check & send log
   relayChainTokenCheck();
   relayChainTokenCheck("Acala");

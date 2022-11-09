@@ -9,7 +9,12 @@ import { Wallet } from "@acala-network/sdk";
 /// check incentive account balances on Acala/Karura and calculate
 /// how many days the payout will go.
 /// send [info] message every day at 9:00 am.
-export const incenticesCheck = async (KarWallet: Wallet, AcaWallet: Wallet) => {
+export const incenticesCheck = async () => {
+  const KarWallet = new Wallet(getKarApi());
+  const AcaWallet = new Wallet(getAcaApi());
+  await KarWallet.isReady;
+  await AcaWallet.isReady;
+
   const karura = await _incenticesCheck(getKarApi(), KarWallet, "qmmNufxeWaAVN8EJK58yYNW1HDcpSLpqGThui55eT3Dfr1a");
   const acala = await _incenticesCheck(getAcaApi(), AcaWallet, "23M5ttkmR6KcoUwA7NqBjLuMJFWCvobsD9Zy95MgaAECEhit");
 

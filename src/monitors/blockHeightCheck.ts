@@ -77,7 +77,7 @@ export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = fa
   const update = cache[env].map((height, i) => latestHeight[i] - height);
   const halted = update.filter((e, i) => e < 1 && latestHeight[i] > 0);
 
-  const checkName = fromSubql ? "services" : "nodes";
+  const checkName = fromSubql ? "subql services" : "nodes";
   let shouldReport = false;
   let logMsg = `${env} ${checkName} check:
 - Active/All ${checkName}: ${latestHeight.length - halted.length}/${latestHeight.length}\n`;
@@ -124,7 +124,9 @@ export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = fa
   const notify = fromSubql ? `<@U01A7DFD0CR> <@UPY6J8X5E>` : logMsg.match("polkawallet.io") ? "<@U01A7DFD0CR>" : "";
 
   Logger.pushEvent(
-    fromSubql ? `[${env} Subql Check] Subql Service Alert` : `[${env} Block Check] Block Height Halt Alert`,
+    fromSubql
+      ? `[${env} Subql Block Height Check] Subql Service Alert`
+      : `[${env} Block Check] Block Height Halt Alert`,
     `%%% \n ${logMsg} \n %%% @slack-watchdog ${notify}`,
     "normal",
     "error"

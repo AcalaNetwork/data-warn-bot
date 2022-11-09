@@ -116,6 +116,8 @@ export class polkaApi {
 }
 
 const apis: Record<string, ApiPromise> = {};
+const allNetworks = ["aca", "kar", "dot", "ksm"];
+let connectedAll = false;
 export const connectNodes = async () => {
   apis["aca"] = new acalaApi().api;
   apis["kar"] = new karuraApi().api;
@@ -126,9 +128,38 @@ export const connectNodes = async () => {
   await apis["kar"].isReady;
   await apis["dot"].isReady;
   await apis["ksm"].isReady;
+
+  connectedAll = true;
+};
+
+export const reConnectAll = async () => {
+  connectedAll = false;
+
+  await Promise.all(allNetworks.map((e) => apis[e].disconnect()));
+
+  // wait 6s to disconnect
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      allNetworks.forEach((e) => {
+        apis[e].connect();
+      });
+      resolve(true);
+    }, 1000 * 6);
+  });
+
+  // wait 30s to re-connect
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      connectedAll = true;
+
+      resolve(true);
+    }, 1000 * 30);
+  });
 };
 
 export const getAcaApi = () => apis["aca"];
 export const getKarApi = () => apis["kar"];
 export const getPolkaApi = () => apis["dot"];
 export const getKsmApi = () => apis["ksm"];
+
+export const getApiConnected = () => connectedAll;
