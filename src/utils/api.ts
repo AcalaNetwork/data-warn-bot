@@ -147,13 +147,14 @@ export const reConnectAll = async () => {
     }, 1000 * 6);
   });
 
-  // wait 30s to re-connect
+  // wait 60s to re-connect
   await new Promise((resolve) => {
     setTimeout(() => {
       connectedAll = true;
 
+      Logger.log("All APIs re-connected!");
       resolve(true);
-    }, 1000 * 30);
+    }, 1000 * 60);
   });
 };
 
