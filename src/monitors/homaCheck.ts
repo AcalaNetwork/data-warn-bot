@@ -12,8 +12,8 @@ const relayLedgerAddresses: Record<ChainName, string[]> = {
 
 /**
  * check homa state:
- * 1. era check. (karura + 1 >= kusama)
- * 2. unlocking list length check. (karura + 1 >= kusama)
+ * 1. era check. (karura + 1 == kusama || karura == kusama)
+ * 2. unlocking list length check. (karura + 1 == kusama || karura == kusama)
  * 3. staking ledger balance check. (balance diff <= 0.3%)
  *
  * send [error] message if check failed
@@ -33,11 +33,12 @@ export const homaCheck = async (env: ChainName = "Karura") => {
     Promise.all(relayLedgerAddresses[env].map((e) => relayApi.query.staking.ledger(e))),
   ]);
   const relayEra = Number((relayEraData as any).unwrapOrDefault().index.toString());
-  const eraCheckOk = Number(era.toString()) + 1 >= relayEra;
+  const paraEra = Number(era.toString());
+  const eraCheckOk = paraEra + 1 === relayEra || paraEra === relayEra;
   let ksmUnlockingLenCheckOk = true;
   let percentCheckOk = true;
 
-  strings += "## Era Check \n";
+  strings += `## Era Check ${eraCheckOk ? "Passed" : "Failed"}\n`;
   strings += `- ${env}: ${era.toString()} \n`;
   strings += `- ${relayChainName}: ${relayEra} \n \n`;
 
@@ -53,19 +54,25 @@ export const homaCheck = async (env: ChainName = "Karura") => {
     const ksmBonded = _ksmBonded - Number(minBond.toString());
     const ksmUnlockingLen = (ksmLedger.toJSON() as any).unlocking.length || 0;
 
-    ksmUnlockingLenCheckOk = ksmUnlockingLenCheckOk && unlockingLen + 1 >= ksmUnlockingLen;
+    ksmUnlockingLenCheckOk =
+      ksmUnlockingLenCheckOk && (unlockingLen + 1 === ksmUnlockingLen || unlockingLen === ksmUnlockingLen);
 
     percentCheckOk = percentCheckOk && Math.abs(ksmBonded - bonded) / bonded <= 0.003;
 
-    strings += `- ${env} homa ledger #${ledgerNo}: bonded: ${bonded} \n`;
-    strings += `- Subaccount on ${relayChainName} #${ledgerNo} bonded: ${ksmBonded} \n`;
+    strings += `- Bonded #${ledgerNo} ${env}: ${bonded} \n`;
+    strings += `- Bonded #${ledgerNo} ${relayChainName}: ${ksmBonded} \n`;
   });
 
-  strings += `- Era check ${eraCheckOk}, Unlocking length check ${ksmUnlockingLenCheckOk}, Balance diff check ${percentCheckOk}.\n`;
+  strings += `- Unlocking length check ${ksmUnlockingLenCheckOk}, Balance diff check ${percentCheckOk}.\n`;
 
-  const title = `[${env} Minnet] Check Homa Status With ${relayChainName} Subaccount`;
+  const title = `[${env} Mainnet] Homa Status Check`;
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
-    Logger.pushEvent(title, `%%% \n ${strings} \n %%%  @slack-watchdog <@UPZRWB4UD>`, "normal", "error");
+    Logger.pushEvent(
+      title,
+      `%%% \n ${strings} \n %%%  @slack-watchdog @webhook-${env.toLowerCase()}_chain_warning_aliyun <@UPZRWB4UD> <@UPXM963KN> <@UPKDQJL3U>`,
+      "normal",
+      "error"
+    );
   } else {
     Logger.pushEvent(title, `%%% \n ${strings} \n %%% @slack-watchdog <@UPZRWB4UD>`, "normal", "info");
   }
