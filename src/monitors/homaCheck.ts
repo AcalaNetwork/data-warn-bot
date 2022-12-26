@@ -39,9 +39,9 @@ export const homaCheck = async (env: ChainName = "Karura") => {
   let totalBonded = 0;
   let totalBondedOnRelay = 0;
 
-  strings += `## Era Check ${eraCheckOk ? "Passed" : "Failed"}\n`;
-  strings += `- ${env}: ${era.toString()} \n`;
-  strings += `- ${relayChainName}: ${relayEra} \n \n`;
+  strings += `- ${env} era: ${era.toString()} \n`;
+  strings += `- ${relayChainName} era: ${relayEra} \n`;
+  strings += eraCheckOk ? `✅ Era Check Passed \n\n` : `❌ Era Check Failed \n\n`;
 
   ledgers.forEach((ledger, i) => {
     const [no, data] = ledger;
@@ -68,9 +68,10 @@ export const homaCheck = async (env: ChainName = "Karura") => {
   const diffPercent = Math.abs(totalBondedOnRelay - totalBonded) / totalBonded;
   const percentCheckOk = diffPercent <= 0.003;
 
-  strings += `- Balance diff ${diffPercent.toFixed(6)}, diff check ${percentCheckOk}.\n\n`;
-
-  strings += `- Unlocking length check ${ksmUnlockingLenCheckOk}.\n`;
+  strings += percentCheckOk
+    ? `✅ Bonded diff ${diffPercent.toFixed(6)}, diff check Passed \n\n`
+    : `❌ Bonded diff ${diffPercent.toFixed(6)}, diff check Failed \n\n`;
+  strings += ksmUnlockingLenCheckOk ? `✅ Unlocking length check Passed \n\n` : `❌ Unlocking length check Failed \n`;
 
   const title = `[${env} Mainnet] Homa Status Check`;
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
