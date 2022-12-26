@@ -36,7 +36,8 @@ export const homaCheck = async (env: ChainName = "Karura") => {
   const paraEra = Number(era.toString());
   const eraCheckOk = paraEra + 1 === relayEra || paraEra === relayEra;
   let ksmUnlockingLenCheckOk = true;
-  let percentCheckOk = true;
+  let totalBonded = 0;
+  let totalBondedOnRelay = 0;
 
   strings += `## Era Check ${eraCheckOk ? "Passed" : "Failed"}\n`;
   strings += `- ${env}: ${era.toString()} \n`;
@@ -57,13 +58,19 @@ export const homaCheck = async (env: ChainName = "Karura") => {
     ksmUnlockingLenCheckOk =
       ksmUnlockingLenCheckOk && (unlockingLen + 1 === ksmUnlockingLen || unlockingLen === ksmUnlockingLen);
 
-    percentCheckOk = percentCheckOk && Math.abs(ksmBonded - bonded) / bonded <= 0.003;
+    totalBonded += bonded;
+    totalBondedOnRelay += ksmBonded;
 
     strings += `- Bonded #${ledgerNo} ${env}: ${bonded} \n`;
     strings += `- Bonded #${ledgerNo} ${relayChainName}: ${ksmBonded} \n`;
   });
 
-  strings += `- Unlocking length check ${ksmUnlockingLenCheckOk}, Balance diff check ${percentCheckOk}.\n`;
+  const diffPercent = Math.abs(totalBondedOnRelay - totalBonded) / totalBonded;
+  const percentCheckOk = diffPercent <= 0.003;
+
+  strings += `- Balance diff ${diffPercent.toFixed(6)}, diff check ${percentCheckOk}.\n\n`;
+
+  strings += `- Unlocking length check ${ksmUnlockingLenCheckOk}.\n`;
 
   const title = `[${env} Mainnet] Homa Status Check`;
   if (!eraCheckOk || !ksmUnlockingLenCheckOk || !percentCheckOk) {
