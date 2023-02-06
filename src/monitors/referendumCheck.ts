@@ -1,5 +1,4 @@
 import { ChainName } from "../types";
-import { DeriveReferendumExt } from "@polkadot/api-derive/types";
 import { Logger, getAcaApi, getKarApi } from "../utils";
 
 const referendumMap: Record<ChainName, Record<string, boolean>> = {
@@ -9,7 +8,7 @@ const referendumMap: Record<ChainName, Record<string, boolean>> = {
 
 export const referendumCheck = async (env: ChainName = "Karura") => {
   const api = env === "Karura" ? getKarApi() : getAcaApi();
-  const referendums: DeriveReferendumExt[] = await api.derive.democracy.referendums();
+  const referendums: any[] = await api.derive.democracy.referendums();
 
   if (referendums.length === 0) return;
 
