@@ -67,7 +67,7 @@ export const ACTIONS = {
   ChainStatsUpdate: 0x16 as const,
 };
 
-export type Action = typeof ACTIONS[keyof typeof ACTIONS];
+export type Action = (typeof ACTIONS)[keyof typeof ACTIONS];
 export type Payload = Message["payload"];
 
 export namespace Variants {
