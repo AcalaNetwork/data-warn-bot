@@ -38,7 +38,7 @@ export const config = {
       "wss://karura.polkawallet.io",
     ],
   },
-  telemetryUrl: "wss://feed.telemetry.polkadot.io/feed",
+  telemetryUrl: "wss://telemetry.aca-staging.network/feed",
   nodeIDs: {
     Acala: [
       // bootnode
@@ -55,10 +55,10 @@ export const config = {
       "12D3KooWEjEBbzk4rptYecG9AHDpadnJHVFsqddGMm9HYZ2Qv9SB",
       "12D3KooW9zA76CH3jAhaiWLykjLoLcisfFpQxLCUuKVWYRS9on7b",
       // pw
-      "12D3KooWSJgcCL77PuTHBNTJ9quNhM81Ya2ihFPx4kRVB4NVCkoJ",
       "12D3KooW9xByBxMhdFQz8hLLCFvtR2UJ3UpAqvdPP1X4FziXe7VH",
       "12D3KooWPqh1yszHoP4PSdLomwk8USVVxpet2dubsuMPasAm6EZL",
-      "12D3KooWQx4ovK8Y4RyoSaNUvjCWjeiNfzTadGUhJhR1faKRzhxq",
+      "12D3KooWGN1fsuSvQmKmq9XgBNrMqVkC9VCDdzLUYeNoW6D1NFCE",
+      "12D3KooWBZLbLmVrt8ZZ2s4EgtmeTjcUuesJfbScXpPWtNCaoNfD",
     ],
     Karura: [
       // bootnode
@@ -75,10 +75,10 @@ export const config = {
       "12D3KooWL1Y3oypd99XANhwcHNnenG7GyTFBN2y7XHBoYY3kinqY",
       "12D3KooWH42pWUQ3xnDfLqe2KkoUeCRYHJQT9SufJiWbroNXzGi5",
       // pw
-      "12D3KooWEqm3GyKpnuiGN8tfUXEhJReeF2XHts9Z61CwXhaeUyZZ",
       "12D3KooWN7Sr8zU7zG6YLoVehJVC9FgdQe8pEzngMaVgRSVWSYys",
       "12D3KooWP52ERCJNxWq8tXBESM9hyt1TMXAnBPWdqbuCBbW3whrv",
-      "12D3KooWPbEn7w2w7ZMirjFvh3Ppm3GBcSnCtKygs8npdkH5yDLh",
+      "12D3KooWMVPfW7ms1tDxUWAwPhMM1LdSXU1GV8qkj5biCH38vEx2",
+      "12D3KooWGmSrRfx4TwA6RwLVr1ie4xxCwWHMLSpv42QKeSh6yhp2",
     ],
   },
 };
