@@ -1,9 +1,9 @@
 export const config = {
   port: 1111,
   endPoints: {
-    karura: "wss://karura-rpc-1.aca-api.network/",
+    karura: "wss://karura-rpc.dwellir.com",
     kusama: "wss://kusama-rpc.polkadot.io/",
-    acala: "wss://acala.polkawallet.io/",
+    acala: "wss://acala-rpc.dwellir.com",
     polkadot: "wss://polkadot.api.onfinality.io/public-ws",
   },
   price: "https://api.polkawallet.io/price-server",
