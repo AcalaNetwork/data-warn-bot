@@ -6,7 +6,7 @@ import { connectNodes, getApiConnected, reConnectAll } from "./utils";
 import { homaCheck } from "./monitors/homaCheck";
 import { incenticesCheck } from "./monitors/incenticesCheck";
 import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
-import { referendumCheck } from "./monitors/referendumCheck";
+import { readReferendumFromFile, referendumCheck } from "./monitors/referendumCheck";
 import { relayChainTokenCheck } from "./monitors/relayChainToken";
 import Koa from "koa";
 // import { dexPoolCheck } from "./servers/dexPoolCheck";
@@ -22,6 +22,8 @@ app.listen(config.port, async () => {
 });
 
 const runloop = () => {
+  readReferendumFromFile();
+
   setInterval(async () => {
     const hour = new Date().getHours();
     // every 1 hour

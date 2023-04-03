@@ -1,5 +1,6 @@
 import { ChainName } from "../types";
 import { Logger, getAcaApi, getKarApi } from "../utils";
+import fs from "fs";
 
 const referendumMap: Record<ChainName, Record<string, boolean>> = {
   Acala: {},
@@ -38,5 +39,26 @@ export const referendumCheck = async (env: ChainName = "Karura") => {
     );
 
     referendumMap[env] = records;
+
+    writeReferendumToFile(referendumMap);
   }
+};
+
+function writeReferendumToFile(data: Record<ChainName, Record<string, boolean>>) {
+  fs.writeFile("./referendum.json", JSON.stringify(data), (err) => {
+    console.log(err);
+  });
+}
+
+export const readReferendumFromFile = () => {
+  fs.readFile("./referendum.json", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const obj = JSON.parse(data.toString());
+      Object.keys(obj).forEach((k) => {
+        referendumMap[k as any as ChainName] = obj[k];
+      });
+    }
+  });
 };
