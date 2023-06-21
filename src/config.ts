@@ -25,6 +25,10 @@ export const config = {
       "wss://acala-rpc-3.aca-api.network/ws",
       // pw
       "wss://acala.polkawallet.io",
+      // subway
+      "wss://acala-rpc-subway-1.aca-api.network",
+      "wss://acala-rpc-subway-2.aca-api.network",
+      "wss://acala-rpc-subway-3.aca-api.network",
     ],
     karura: [
       // third part
@@ -36,6 +40,10 @@ export const config = {
       "wss://karura-rpc-3.aca-api.network/ws",
       // pw
       "wss://karura.polkawallet.io",
+      // subway
+      "wss://karura-rpc-subway-1.aca-api.network",
+      "wss://karura-rpc-subway-2.aca-api.network",
+      "wss://karura-rpc-subway-3.aca-api.network",
     ],
   },
   telemetryUrl: "wss://telemetry.aca-staging.network/feed",
