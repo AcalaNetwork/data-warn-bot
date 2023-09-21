@@ -65,7 +65,7 @@ export class Connection {
   // id sent to the backend used to pair responses
   private pingId = 0;
   // timeout handler for ping messages
-  private pingTimeout: NodeJS.Timer;
+  private pingTimeout: NodeJS.Timeout;
   // timestamp at which the last ping has been sent
   private pingSent: Maybe<Types.Timestamp> = null;
   // chain label to resubsribe to on reconnect

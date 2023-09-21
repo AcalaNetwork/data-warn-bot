@@ -1,7 +1,7 @@
 export const config = {
   port: 1111,
   endPoints: {
-    karura: "wss://karura-rpc.dwellir.com",
+    karura: "wss://karura.api.onfinality.io/public-ws",
     kusama: "wss://kusama-rpc.polkadot.io/",
     acala: "wss://acala-rpc.dwellir.com",
     polkadot: "wss://polkadot.api.onfinality.io/public-ws",
