@@ -7,7 +7,7 @@ import { options } from "@acala-network/api";
 
 export type TChain = "karura" | "kusama";
 
-interface IToken extends Object {
+interface IToken {
   token?: string;
   dexShare?: IToken[];
   foreignAsset?: number;
