@@ -54,6 +54,9 @@ const runloop = () => {
       // homa check & send event
       homaCheck();
       homaCheck("Acala");
+
+      relayChainTokenCheck("Karura", true);
+      relayChainTokenCheck("Acala", true);
     }
   }, 1000 * 60 * 60);
 };

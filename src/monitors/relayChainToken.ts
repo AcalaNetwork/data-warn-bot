@@ -1,11 +1,11 @@
 import { ChainName } from "../types";
 import { FixedPointNumber } from "@acala-network/sdk-core";
+import { Logger, getAcaApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
 import { config } from "../config";
-import { getAcaApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
 
 /// check DOT/KSM balance between parachain-account and total-issuance,
 /// send [diff-ratio] message.
-export const relayChainTokenCheck = async (env: ChainName = "Karura") => {
+export const relayChainTokenCheck = async (env: ChainName = "Karura", toSlack = false) => {
   let diff = FixedPointNumber.ZERO;
   let diffRatio = 0;
   let msg = "";
@@ -41,6 +41,17 @@ export const relayChainTokenCheck = async (env: ChainName = "Karura") => {
 - Total Issuance in ${env}: ${acaBalance.toNumber(4)}
 - Difference (${env} - ${relayChain}): ${diff.toNumber(4)}
 - Difference Ratio: ${diffRatio}`;
+  }
+
+  if (toSlack) {
+    const title = `[${env} Mainnet] ${token} Balance Check`;
+    Logger.pushEvent(
+      `${title}`,
+      `%%% \n ${Math.abs(diffRatio) > 0.01 ? "🚨" : "✅"} \n ${msg} \n %%% @slack-watchdog <@UPZRWB4UD>`,
+      "normal",
+      "info"
+    );
+    return;
   }
 
   watchDogLog(
