@@ -13,7 +13,10 @@ export const relayChainTokenCheck = async (env: ChainName = "Karura", toSlack = 
   const relayChain = token === "KSM" ? "kusama" : "polkadot";
   if (token === "KSM") {
     const ksmAccount = await getKsmApi().query.system.account(config.ksm.account);
-    const ksmBalance = FixedPointNumber.fromInner((ksmAccount as any).data.free.toString(), config.ksm.decimal);
+    const ksmBalance = FixedPointNumber.fromInner(
+      ksmAccount.data.free.add(ksmAccount.data.reserved).toString(),
+      config.ksm.decimal
+    );
 
     const _karBalance = await getKarApi().query.tokens.totalIssuance({
       Token: "KSM",
@@ -28,7 +31,10 @@ export const relayChainTokenCheck = async (env: ChainName = "Karura", toSlack = 
 - Difference Ratio: ${diffRatio}`;
   } else {
     const polkaAccount = await getPolkaApi().query.system.account(config.ksm.account);
-    const polkaBalance = FixedPointNumber.fromInner((polkaAccount as any).data.free.toString(), 10);
+    const polkaBalance = FixedPointNumber.fromInner(
+      polkaAccount.data.free.add(polkaAccount.data.reserved).toString(),
+      10
+    );
 
     const _acaBalance = await getAcaApi().query.tokens.totalIssuance({
       Token: "DOT",
