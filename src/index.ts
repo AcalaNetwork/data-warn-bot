@@ -57,6 +57,8 @@ const runloop = () => {
 
       relayChainTokenCheck("Karura", true);
       relayChainTokenCheck("Acala", true);
+
+      relayChainTokenCheck("AssetHub", true);
     }
   }, 1000 * 60 * 60);
 };

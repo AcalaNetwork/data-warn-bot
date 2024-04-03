@@ -1,17 +1,22 @@
-import { ChainName } from "../types";
 import { FixedPointNumber } from "@acala-network/sdk-core";
-import { Logger, getAcaApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
+import { Logger, getAcaApi, getAssetHubApi, getKarApi, getKsmApi, getPolkaApi, watchDogLog } from "../utils";
 import { config } from "../config";
 
 /// check DOT/KSM balance between parachain-account and total-issuance,
 /// send [diff-ratio] message.
-export const relayChainTokenCheck = async (env: ChainName = "Karura", toSlack = false) => {
+export const relayChainTokenCheck = async (env = "Karura", toSlack = false) => {
   let diff = FixedPointNumber.ZERO;
   let diffRatio = 0;
   let msg = "";
   const token = env === "Karura" ? "KSM" : "DOT";
   const relayChain = token === "KSM" ? "kusama" : "polkadot";
-  if (token === "KSM") {
+  if (env === "AssetHub") {
+    const hubAccount = await getAssetHubApi().query.system.account(config.assetHub.account);
+    const hubBalance = FixedPointNumber.fromInner(hubAccount.data.free.toString(), config.assetHub.decimal);
+
+    diffRatio = hubBalance.toNumber() > 0.5 ? 0 : 1;
+    msg = `- ${token} Balacne in AssetHub Account: ${hubBalance.toNumber(4)}`;
+  } else if (token === "KSM") {
     const ksmAccount = await getKsmApi().query.system.account(config.ksm.account);
     const ksmBalance = FixedPointNumber.fromInner(
       ksmAccount.data.free.add(ksmAccount.data.reserved).toString(),

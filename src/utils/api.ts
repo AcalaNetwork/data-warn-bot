@@ -115,19 +115,41 @@ export class polkaApi {
   }
 }
 
+export class assetHubApi {
+  static instance: assetHubApi | null;
+  public api: ApiPromise;
+  constructor() {
+    const provider = new WsProvider(config.endPoints.assetHub);
+    this.api = new ApiPromise(options({ provider }));
+    this.api.isReadyOrError
+      .then(() => {
+        Logger.log("assetHubApi is Ready!");
+      })
+      .catch((err) => {
+        Logger.pushEvent(API_ERROR, err, "normal", "error");
+      });
+    if (assetHubApi.instance == null) {
+      assetHubApi.instance = this;
+    }
+    return assetHubApi.instance;
+  }
+}
+
 const apis: Record<string, ApiPromise> = {};
-const allNetworks = ["aca", "kar", "dot", "ksm"];
+const allNetworks = ["aca", "kar", "dot", "ksm", "hub"];
 let connectedAll = false;
 export const connectNodes = async () => {
   apis["aca"] = new acalaApi().api;
   apis["kar"] = new karuraApi().api;
   apis["dot"] = new polkaApi().api;
   apis["ksm"] = new kusamaApi().api;
+  apis["hub"] = new assetHubApi().api;
 
   await apis["aca"].isReady;
   await apis["kar"].isReady;
   await apis["dot"].isReady;
   await apis["ksm"].isReady;
+  await apis["hub"].isReady;
 
   connectedAll = true;
 };
@@ -162,5 +184,6 @@ export const getAcaApi = () => apis["aca"];
 export const getKarApi = () => apis["kar"];
 export const getPolkaApi = () => apis["dot"];
 export const getKsmApi = () => apis["ksm"];
+export const getAssetHubApi = () => apis["hub"];
 
 export const getApiConnected = () => connectedAll;

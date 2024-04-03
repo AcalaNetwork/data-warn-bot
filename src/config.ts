@@ -5,11 +5,16 @@ export const config = {
     kusama: "wss://kusama-rpc.polkadot.io/",
     acala: "wss://acala-rpc.dwellir.com",
     polkadot: "wss://polkadot.api.onfinality.io/public-ws",
+    assetHub: "wss://statemint-rpc.dwellir.com",
   },
   price: "https://api.polkawallet.io/price-server",
   ksm: {
     account: "F7fq1jMZkfuCuoMTyiEVAP2DMpMt18WopgBqTJznLihLNbZ",
     decimal: 12,
+  },
+  assetHub: {
+    account: "13cKp89Msu7M2PiaCuuGr1BzAsD5V3vaVbDMs3YtjMZHdGwR",
+    decimal: 10,
   },
   kar: {
     prefix: 8,
