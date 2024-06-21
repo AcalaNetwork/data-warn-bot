@@ -8,6 +8,7 @@ import { incenticesCheck } from "./monitors/incenticesCheck";
 import { pushTelemetryLog, startTelemetry } from "./monitors/telemetry";
 import { readReferendumFromFile, referendumCheck } from "./monitors/referendumCheck";
 import { relayChainTokenCheck } from "./monitors/relayChainToken";
+import { xcmFeeTokenCheck } from "./monitors/xcmFeeTokenCheck";
 import Koa from "koa";
 // import { dexPoolCheck } from "./servers/dexPoolCheck";
 
@@ -59,6 +60,9 @@ const runloop = () => {
       relayChainTokenCheck("Acala", true);
 
       relayChainTokenCheck("AssetHub", true);
+
+      xcmFeeTokenCheck("Karura", true);
+      xcmFeeTokenCheck("Acala", true);
     }
   }, 1000 * 60 * 60);
 };
