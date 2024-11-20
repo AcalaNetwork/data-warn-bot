@@ -63,7 +63,7 @@ async function _getHeightWithSubql(url: string) {
 
 export const blockHeightCheck = async (env: ChainName = "Karura", fromSubql = false) => {
   const allNodes = env == "Acala" ? config.allNodes.acala : config.allNodes.karura;
-  const allSubql = ["history", "loan", "dex", "stats"].map((e) => `${env.toLowerCase()}-${e}-subql`);
+  const allSubql = ["history", "dex", "stats"].map((e) => `${env.toLowerCase()}-${e}-subql`);
   const urls = fromSubql ? allSubql : allNodes;
   const latestHeight = await Promise.all(urls.map((e) => (fromSubql ? _getHeightWithSubql(e) : _getHeightWithWs(e))));
   const cache = fromSubql ? subqlBlockHeightCache : blockHeightCache;
